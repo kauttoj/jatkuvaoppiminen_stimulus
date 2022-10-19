@@ -30,7 +30,7 @@ var you_timing = {
     timeoutBeforeResponse	: 1000, // Before they can make resp after prompt/stim, WAS 2000
 };
 
-var peerC = [12.5, 87.5].rep(3);  // 4 blocks, half-and-half
+var peerC = [12.5, 87.5].rep(4);  // 4 blocks, half-and-half
 
 var main_questions = [
 	'Kurssi auttaa sinua etenemään työurallasi.',

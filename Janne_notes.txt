@@ -1,5 +1,0 @@
-TODO:
-
--muuta mysteerikysymys toteamiseksi (A valitsi tämän, B valitsi tämän) ja lisää Likert kysymykset (samalle sivulle tai erikseen)
--varmista että likert tulokset tallentuu
--muuta keyboard vastaukset hiireksi

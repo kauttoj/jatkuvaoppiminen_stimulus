@@ -12,10 +12,16 @@ var females = shuffleTogether([
   'femaleface9.jpg',
   'femaleface10.jpg',
   'femaleface11.jpg',
-  'femaleface12.jpg'
+  'femaleface12.jpg',
+  'femaleface13.jpg',
+  'femaleface14.jpg',
+  'femaleface15.jpg',
+  'femaleface16.jpg',
+  'femaleface17.jpg',
+  'femaleface18.jpg',
 ],
 [
-  "Liisa","Maija","Iida","Päivi","femalename5","femalename6","femalename7","femalename8","femalename9","femalename10","femalename11","femalename12"
+  "Liisa","Maija","Iida","Päivi","Roosa","Emmi","Aada","Meri","Laura","Jenni","Sanni","Kata",'Linda','Minna','Anneli','Janika','Aava','Kirsi' 
 ]);
 
 var males = shuffleTogether([
@@ -31,9 +37,15 @@ var males = shuffleTogether([
   'maleface10.jpg',
   'maleface11.jpg',
   'maleface12.jpg',
+  'maleface13.jpg',
+  'maleface14.jpg',
+  'maleface15.jpg',  
+  'maleface16.jpg',
+  'maleface17.jpg',
+  'maleface18.jpg',  
 ],
 [
-  "Alvin", "James","malename3","malename4","malename5","malename6","malename7","malename8","malename9","malename20","malename11","malename12"]);
+  "Janne", "Niko","Kari","Jussi","Eemeli","Jani","Esa","Jere","Matti","Jyrki","Jussi","Paavo","Heikki","Kalle","Pete","Ville","Jarkko","Timo"]);
 
 var mixed_genders = shuffleTogether([
   //add all male and female filenames here
@@ -49,6 +61,12 @@ var mixed_genders = shuffleTogether([
   'femaleface10.jpg',
   'femaleface11.jpg',
   'femaleface12.jpg',
+  'femaleface13.jpg',
+  'femaleface14.jpg',
+  'femaleface15.jpg',
+  'femaleface16.jpg',
+  'femaleface17.jpg',
+  'femaleface18.jpg',
   'maleface1.jpg',
   'maleface2.jpg',
   'maleface3.jpg',
@@ -61,8 +79,13 @@ var mixed_genders = shuffleTogether([
   'maleface10.jpg',
   'maleface11.jpg',
   'maleface12.jpg',
-
+  'maleface13.jpg',
+  'maleface14.jpg',
+  'maleface15.jpg',
+  'maleface16.jpg',
+  'maleface17.jpg',
+  'maleface18.jpg',
 ], [
-  "Irene","Alice","femalename3","femalename4","femalename5","femalename6","femalename7","femalename8","femalename9","femalename10","femalename11","femalename12",
-  "Alvin", "James","malename3","malename4","malename5","malename6","malename7","malename8","malename9","malename20","malename11","malename12"
+  "Liisa","Maija","Iida","Päivi","Roosa","Emmi","Aada","Meri","Laura","Jenni","Sanni","Kata",'Linda','Minna','Anneli','Janika','Aava','Kirsi',
+  "Janne", "Niko","Kari","Jussi","Eemeli","Jani","Esa","Jere","Matti","Jyrki","Jussi","Paavo","Heikki","Kalle","Pete","Ville","Jarkko","Timo"
 ]);
