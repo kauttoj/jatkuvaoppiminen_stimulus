@@ -149,12 +149,12 @@ var welcome_block = {
 
 var comments_block = {
     type: 'survey-text-sam',
-    questions: ['Jos haluat osallistua arvontaan, anna email osoitteesi tai muu haluamasi yhteystieto','Avoimet kommentit'],
+    questions: ['Jos haluat osallistua arvontaan, syötä email osoitteesi tai muu haluamasi yhteystieto','Avoimet kommentit ja palaute'],
     //value: MID,
-    validation: [function(x){return true},function(x){return true}],
+    validation: [function(x){return true},function(x){return true}], // we don't really check these
     rows: [4,5],
     input_type: ['textarea','textarea'],
-    preamble: ["<div> We would be grateful for any feedback in the event that you found any aspect(s) of the study unclear. Please use the space below to record any questions, comments, or feedback you may have. Thank you! </div>"],	
+    preamble: ["<div> Haluaisimme vielä saada yhteystietosi arvontaa varten ja kuulla palautteesi kyselyyn liittyen. Nämä ovat vapaaehtoisia tietoja ja voit siirtyä suoraan eteenpäin.</div>"]	
 };
 
 var g = 'a'
@@ -169,7 +169,7 @@ var demo_block = {
 		'Millä toimialla työskentelet?', // text
 		'Kuinka monta vuotta olet ollut työelämässä yhteensä?', // number
 	],
-	value: [20], // REMOVE IN PRODUCTION
+	value: [], // REMOVE IN PRODUCTION
 	input_type: ['likert','likert','likert','text','text','text','text'], // ['text','text','text','text']
 	label: [['en','kyllä'],['nainen','mies','en halua sanoa / muu'],['peruskoulu','ammattikoulu / lukio','korkeakoulu','lisensiaatti / tohtori','muu'],'','','',''], //['','','','']
     validation: [function(x){return (x!='undefined')},function(x){return (x!='undefined')},function(x){return (x!='undefined')},
@@ -208,16 +208,7 @@ var demo_block = {
 	  console.log('valittu sukupuoli ' + g)
 	  var progress = jsPsych.progress();
 	  console.log('You have completed approximately '+progress.percent_complete+'% of the experiment');
-/*	  
-	  jsPsych.data.addDataToLastTrial({		 
-		age: trial_data['Q3'],
-		profession: trial_data['Q4'],
-		degree: trial_data['Q2'],
-		field: trial_data['Q5'],
-		jobhistry: trial_data['Q6'],
-		traininghistory: trial_data['Q0'],
-	 });
-	 */
+
 		var current_stim = 0
 		for(var i = 0; i < NBLOCKS; i++) {		
 			var stim = stims.stimuli.splice(0,NSTIMS);
@@ -321,18 +312,6 @@ jsPsych.pluginAPI.preloadImages(stims, function () {
      catch (e) {
 		 console.log('ERROR: Could not retrieve data on finishing!')
 	 }
-	 /*
-     var gend;
-     if (g == 'f') {
-       gend = 'female';
-     }
-     else if (g == 'm') {
-       gend = 'male';
-     }
-     else {
-       gend = 'other';
-     }
-	 */
 
      $('#jspsych-content').empty()
      .css('visibility', 'visible')
