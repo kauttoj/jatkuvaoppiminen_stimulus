@@ -1,2 +1,6 @@
 # jatkuvaoppiminen_stimulus
-Heavily cusomized version of the original GroupRepTask repo
+Heavily customized version of the original GroupRepTask repo.
+
+TODO:
+-fix progressbar (now jumping around)
+-allow mouse selection, not just keys E and I
