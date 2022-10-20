@@ -440,6 +440,12 @@ jsPsych.plugins.similarity = (function () {
             }
             $('#jspsych-stim').css('visibility', 'visible');
         }
+		function startImgClickListener() {
+			$('#jspsych-choice_' + 0).children('img.stim')[0].addEventListener('click', (e) => {logResp({key:trial.choices[0].charCodeAt(0),rt:(new Date()).getTime()-startTime})},{once : true})
+			$('#jspsych-choice_' + 0).children('img.stim')[0].clicked = false
+			$('#jspsych-choice_' + 1).children('img.stim')[0].addEventListener('click', (e) => {logResp({key:trial.choices[1].charCodeAt(0),rt:(new Date()).getTime()-startTime})},{once : true})
+			$('#jspsych-choice_' + 1).children('img.stim')[0].clicked = false
+		}		
 
         function showNextStim() {
             console.log('Current stimilus is ' + trial.stimuli[0])
@@ -475,9 +481,11 @@ jsPsych.plugins.similarity = (function () {
                 custTimeout(askPref, trial.timeoutBeforePrompt);
                 custTimeout(writeStims, trial.timeoutBeforeStim);
                 var max_t = Math.max(trial.timeoutBeforePrompt, trial.timeoutBeforeStim);
-                custTimeout(startKeyListener, trial.timeoutBeforeResponse + max_t);
-				$('#jspsych-choice_' + 0).children('img.stim')[0].addEventListener('click', (e) => {logResp({key:trial.choices[0].charCodeAt(0),rt:(new Date()).getTime()-startTime})})
-				$('#jspsych-choice_' + 1).children('img.stim')[0].addEventListener('click', (e) => {logResp({key:trial.choices[1].charCodeAt(0),rt:(new Date()).getTime()-startTime})})
+                custTimeout(startKeyListener, trial.timeoutBeforeResponse + max_t);								
+				
+				if (trial.practice == false) {
+					custTimeout(startImgClickListener, trial.timeoutBeforeResponse + max_t);					
+				}
             }
 
             //$(display_element).css('visibility', 'visible');
@@ -495,6 +503,7 @@ jsPsych.plugins.similarity = (function () {
                     $('#continueBlock').remove();
                     setTrialInstructs();
                     startKeyListener();
+					startImgClickListener();
                 };
 
                 stopKeyListener();
@@ -854,10 +863,23 @@ jsPsych.plugins.similarity = (function () {
         }
 
         function logResp(arg) {
+			
+			if ((typeof $('#jspsych-choice_' + 0).children('img.stim')[0] !== 'undefined') && (typeof $('#jspsych-choice_' + 1).children('img.stim')[0] !== 'undefined')) {	
+				// clicking only
+				if ($('#jspsych-choice_' + 0).children('img.stim')[0].clicked || $('#jspsych-choice_' + 0).children('img.stim')[0].clicked) {
+					return;	 // either button pressed, leave
+				} else {
+					// set as pressed
+					$('#jspsych-choice_' + 0).children('img.stim')[0].clicked=true
+					$('#jspsych-choice_' + 1).children('img.stim')[0].clicked=true					
+				}
+			}
+			
             try {
                 stopKeyListener(); // need to skip this in mystery phase
             } catch (err) { ;
             }
+										
             jsPsych.pluginAPI.clearAllTimeouts();
 
             var endTime = (new Date()).getTime();

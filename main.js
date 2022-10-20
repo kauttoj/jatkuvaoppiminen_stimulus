@@ -278,7 +278,7 @@ var practice_warning_block = {
 };
 
 timeline.push(welcome_block);
-timeline.push(likert_block);
+//timeline.push(likert_block);
 
 main_questions.shuffle() // ask again in different order
 timeline.push(demo_block);
