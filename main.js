@@ -81,7 +81,7 @@ function practiceGenPoli(opts) {
 	    "stimDir" : "",
 	    "timeline":[
         {"phase": "FIRST",
-        "prompt":"<br>Kyselyn aikana sinulle esitetään erilaisia mielipiteitä. Harkitse kunkin kysymyksen kohdalla hetki ennen kuin vastaat kannattavasi tai vastustavasi esitettyä mielipidettä. Kun kukin uusi mielipide esitetään, sinua pyydetään osoittamaan oma mielipiteesi <strong>painamalla E tai I näppäintä</strong>.<br>Huomaa myös ruudun oikeassa yläkulmassa oleva taulukko, joka näyttää sinun ja muiden tekemät valinnat sitä mukaan, kun niitä kertyy.<br><br> Harkitse nyt seuraavaa mielipidettä:<br><strong>Pitääkö sarjakuvissa olla juoneen liittyvää ankanmetsästystä?</strong>\
+        "prompt":"<br>Kyselyn aikana sinulle esitetään erilaisia mielipiteitä. Harkitse kunkin kysymyksen kohdalla hetki ennen kuin vastaat kannattavasi tai vastustavasi esitettyä mielipidettä. Kun kukin uusi mielipide esitetään, sinua pyydetään osoittamaan oma mielipiteesi <strong>klikkaamalla kuvaa tai painamalla E tai I näppäintä</strong>.<br>Huomaa myös ruudun oikeassa yläkulmassa oleva taulukko, joka näyttää sinun ja muiden tekemät valinnat sitä mukaan, kun niitä kertyy.<br><br> Harkitse nyt seuraavaa mielipidettä:<br><strong>Pitääkö sarjakuvissa olla juoneen liittyvää ankanmetsästystä?</strong>\
 <br>Valitsetko KYLLÄ vai EI? Punainen X merkitsee aina EI ja vihreä väkänen tarkoittaa aina KYLLÄ<br>",
 		 "instructsAfterClick":"<br>Tee valintasi nyt kysymykseen:\
 <br>Pitääkö sarjakuvissa olla juoneen liittyvää ankanmetsästystä?\
@@ -206,8 +206,8 @@ var demo_block = {
         jsPsych.data.addDataToLastTrial({gender: 'muu'});
 	  }
 	  console.log('valittu sukupuoli ' + g)
-	  var progress = jsPsych.progress();
-	  console.log('You have completed approximately '+progress.percent_complete+'% of the experiment');
+	  //var progress = jsPsych.progress();
+	  //console.log('You have completed approximately '+progress.percent_complete+'% of the experiment');
 
 		var current_stim = 0
 		for(var i = 0; i < NBLOCKS; i++) {		
@@ -250,7 +250,7 @@ var demo_block = {
 			current_stim = current_stim+2 // proceed by two
 		}
 		jsPsych.addNodeToEndOfTimeline(comments_block);
-		console.log('You have completed approximately '+progress.percent_complete+'% of the experiment');
+		//console.log('You have completed approximately '+progress.percent_complete+'% of the experiment');
   }
 };
 
@@ -280,9 +280,9 @@ var practice_warning_block = {
 timeline.push(welcome_block);
 timeline.push(likert_block);
 
-main_questions.shuffle()
+main_questions.shuffle() // ask again in different order
 timeline.push(demo_block);
-//timeline.push(fullscreen_block);
+timeline.push(fullscreen_block);
 timeline.push(practice_warning_block);
 
 timeline.push.apply(timeline,practice_timeline);  // appending list to list

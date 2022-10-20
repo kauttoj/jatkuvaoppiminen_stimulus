@@ -415,6 +415,8 @@ jsPsych.plugins.similarity = (function () {
                 $('#jspsych-choice_' + i).html($('<img>', {
                         src: trial.stimDir + trial.stimuli[i],
                         class: 'stim',
+						border: '1px solid',
+						"border-color": 'gray',
                     }));
 
                 if (trial.yes_no_labels == true) {
@@ -474,6 +476,8 @@ jsPsych.plugins.similarity = (function () {
                 custTimeout(writeStims, trial.timeoutBeforeStim);
                 var max_t = Math.max(trial.timeoutBeforePrompt, trial.timeoutBeforeStim);
                 custTimeout(startKeyListener, trial.timeoutBeforeResponse + max_t);
+				$('#jspsych-choice_' + 0).children('img.stim')[0].addEventListener('click', (e) => {logResp({key:trial.choices[0].charCodeAt(0),rt:(new Date()).getTime()-startTime})})
+				$('#jspsych-choice_' + 1).children('img.stim')[0].addEventListener('click', (e) => {logResp({key:trial.choices[1].charCodeAt(0),rt:(new Date()).getTime()-startTime})})
             }
 
             //$(display_element).css('visibility', 'visible');
@@ -835,6 +839,7 @@ jsPsych.plugins.similarity = (function () {
                 persist: true,
                 allow_held_key: false
             });
+			// allow pictures to be clicked also		
             // keyboard_listener2 = jsPsych.pluginAPI.getKeyboardResponse({
             // 	callback_function: fmriAdvance,
             // 	valid_responses: ['p'],
