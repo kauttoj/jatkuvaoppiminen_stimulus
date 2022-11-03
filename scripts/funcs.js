@@ -577,7 +577,7 @@ function poliTimelineGen (stims, prompts, peers, opts) {
 }
 
 
-function poliTimelineGenNames (stims, prompts, peers, names, opts) {
+function poliTimelineGenNames(stims, prompts, peers, names, opts) {
     var stims_prompts = [stims, prompts].transpose();
     stims_prompts.shuffle();
     var opts = opts || {}
@@ -653,44 +653,47 @@ function poliTimelineGenNames (stims, prompts, peers, names, opts) {
     var timeline = [];
 
     for(var i = 0; i < stims.length; i++) {
-	var you_trial = {prompt: prompts[i] + "<br><span id='subprompt'>Miten <u>sinä</u> valitset?</span>", peer: 0,};
-	$.extend(you_trial, opts.you_timing);
-	var trial_stims = ["oes/" + opts.stimDir + stims[i], "xes/" + opts.stimDir + stims[i]];
-	trial_stims.shuffle();
-	var block = {
-	    type		: 'similarity',
-	    prompt		: 'Which movie would you prefer to watch?',
-	    peers		: peers,
-	    peerExt		: '',
-	    names		: names,
-	    stimDir             : './',
-	    peer_agree		: peer_agree[i],
-	    peer_compare	: peer_compare,
-	    peer_label		: peerLabels,
-	    stimuli		: trial_stims,
-		mystery_questions : opts.mystery_questions,
-	    prompt		: prompt,
-	    testing		: testing,
-	    timing_post_trial	: timing_post_trial,
-	    choices		: choices,
-	    peerCPercent	: peerCPercent,
-	    data		: {block_num: block_num},
-	    timeline: [
-		you_trial,
-		{peer: 1, prompt: prompts[i] + "<br><span id='subprompt'>Miten arvioit että <u>${peer}</u> valitsi?</span>"},
-		{peer: 2, prompt: prompts[i] + "<br><span id='subprompt'>Miten arvioit että <u>${peer}</u> valitsi?</span>"},
-		{peer: 3, prompt: prompts[i] + "<br><span id='subprompt'>Miten arvioit että <u>${peer}</u> valitsi?</span>"},
-	    ]
-	}
-	if (i == 0) {
-	    block.timeline[0].phase = "FIRST";
-	}
-	if (i == stims.length - 1) {
-	    block.timeline.push({phase: "MYSTERY", prompt:'${peer1} and ${peer2} valitsivat seuraavasti.'});
-	}
-	console.log(opts.timing);
-	$.extend(block, opts.timing);
-	timeline.push(block);
+		var you_trial = {prompt: prompts[i] + "<br><span id='subprompt'>Miten <u>sinä</u> valitset?</span>", peer: 0,};
+		$.extend(you_trial, opts.you_timing);
+		var trial_stims = ["oes/" + opts.stimDir + stims[i], "xes/" + opts.stimDir + stims[i]];		
+		trial_stims.shuffle();
+		var trial_stims_mystery = ["oes/" + opts.stimDir + stims[i], "xes/" + opts.stimDir + stims[i]];
+		trial_stims_mystery.shuffle();
+		var block = {
+			type		: 'similarity',
+			prompt		: 'Which movie would you prefer to watch?',
+			peers		: peers,
+			peerExt		: '',
+			names		: names,
+			stimDir             : './',
+			peer_agree		: peer_agree[i],
+			peer_compare	: peer_compare,
+			peer_label		: peerLabels,
+			stimuli		: trial_stims,
+			mystery : trial_stims_mystery,
+			mystery_questions : opts.mystery_questions,
+			prompt		: prompt,
+			testing		: testing,
+			timing_post_trial	: timing_post_trial,
+			choices		: choices,
+			peerCPercent	: peerCPercent,
+			data		: {block_num: block_num},
+			timeline: [
+			you_trial,
+			{peer: 1, prompt: prompts[i] + "<br><span id='subprompt'>Miten arvioit että <u>${peer}</u> valitsi?</span>"},
+			{peer: 2, prompt: prompts[i] + "<br><span id='subprompt'>Miten arvioit että <u>${peer}</u> valitsi?</span>"},
+			{peer: 3, prompt: prompts[i] + "<br><span id='subprompt'>Miten arvioit että <u>${peer}</u> valitsi?</span>"},
+			]
+		}
+		if (i == 0) {
+			block.timeline[0].phase = "FIRST";
+		}
+		if (i == stims.length - 1) {
+			block.timeline.push({phase: "MYSTERY", prompt:block.mystery_questions + '<br><br>${peer1} ja ${peer2} valitsivat seuraavasti:'});
+		}
+		console.log(opts.timing);
+		$.extend(block, opts.timing);
+		timeline.push(block);
     }
 
     return timeline;

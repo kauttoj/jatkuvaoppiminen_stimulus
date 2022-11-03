@@ -1,15 +1,10 @@
-var study = "studyname";
+var study = "jatkuva_oppiminen";
 var NBLOCKS = 6; // 6
 var NSTIMS = 8; //8
 var NPEERS = 3; // 3
 
 var subjID = getSubjID(8);
-var testing = $.url().param('testing');
-if (testing == 1) {
-    testing = true;
-} else {
-    testing = false;
-}
+var filename = subjID + '_' + study + '.csv';
 
 var block;
 var g; // gender variable
@@ -19,34 +14,19 @@ var peerC = [12.5, 87.5].rep(4); // 4 blocks, half-and-half
 var timing = {
     timeoutBeforePrompt: 0,
     timeoutBeforeStim: 0,
-    timeoutBeforeResponse: 500, // Before they can make resp after prompt/stim, WAS 1000
-    timeoutBeforeMystery: 1000, // WAS 2000
+    timeoutBeforeResponse: 1000, // Before they can make resp after prompt/stim, WAS 1000
+    timeoutBeforeMystery: 1750, // WAS 2000
     timeoutBeforeFeedback: 0, // This is evil. Don't use it
-    timeoutAfterFeedback: 500, // WAS 1000
-    timeoutAfterFeedbackMystery: 500, // WAS 1000
-    timing_post_trial: 250, // WAS 500
+    timeoutAfterFeedback: 1000, // WAS 1000
+    timeoutAfterFeedbackMystery: 1000, // WAS 1000
+    timing_post_trial: 500, // WAS 500
 };
 
 var you_timing = {
     timeoutBeforePrompt: 0,
     timeoutBeforeStim: 0,
-    timeoutBeforeResponse: 1000, // Before they can make resp after prompt/stim, WAS 2000
+    timeoutBeforeResponse: 2000, // Before they can make resp after prompt/stim, WAS 2000
 };
-
-var main_questions = [
-    'Kurssi auttaa sinua etenemään työurallasi.',
-    'Kurssilla opit hakemaan alaasi liittyvää tietoa itsenäisesti.',
-    'Kurssilla opit muistamaan alasi asioita paremmin.',
-    'Kurssin vetäjät ohjeistavat sinua tarkasti tehtävien suorittamisessa.',
-    'Kurssi auttaa sinua hyödyntämään alasi tieteellisiä artikkeleita ja kirjoja.',
-    'Saatat jäädä “koukkuun” kurssin asioihin niin, että haluat jatkaa niiden parissa kurssin jälkeenkin.',
-    'Kurssi auttaa edustamaasi yritystä pärjäämään kilpailussa.',
-    'Kurssi auttaa tukemaan edustamasi yrityksen toimintoja tehokkaammin.',
-    'Kurssi auttaa muuttamaan edustamasi yrityksen nykyisiä käytäntöjä.',
-    'Kurssilla opit ratkaisemaan paljon ajattelua edellyttäviä ongelmia edustamassasi yrityksessä.',
-    'Kurssilla opit ratkaisemaan selkeästi määriteltyjä tehtäviä edustamassasi yrityksessä.',
-    'Kurssi auttaa sinua selviytymään arjen työtehtävistä paremmin.', ]
-main_questions.shuffle()
 
 //ONLY TEXT, PREAMBLES, AND HTML SHOULD BE CHANGED BEYOND THIS POINT.
 var peers = {
@@ -67,45 +47,44 @@ function practiceGenPoli(opts) {
             "stimuli": ["xes/example/example.jpg", "oes/example/example.jpg"],
             "choices": ["e", "i"], // must be lowercase!
             "peerExt": ".jpg",
-            "trialButtonLabel": 'Kun olet lukenut ohjeet, paina Jatka nappia: <br>',
-            "feedbackButtonLabel": "Paina nappia jatkaaksesi: <br>",
+            //"trialButtonLabel": 'Kun olet lukenut ohjeet, paina Jatka nappia: <br>',
+            //"feedbackButtonLabel": "Paina nappia jatkaaksesi: <br>",
             "practice": true,
             "stimDir": "",
-            "timeline": [{
+            "timeline": [
+			{
                     "phase": "FIRST",
-                    "prompt": "<br>Kyselyn aikana sinulle esitetään erilaisia mielipiteitä. Harkitse kunkin kysymyksen kohdalla hetki ennen kuin vastaat kannattavasi tai vastustavasi esitettyä mielipidettä. Kun kukin uusi mielipide esitetään, sinua pyydetään osoittamaan oma mielipiteesi <strong>klikkaamalla kuvaa tai painamalla E tai I näppäintä</strong>.<br>Huomaa myös ruudun oikeassa yläkulmassa oleva taulukko, joka näyttää sinun ja muiden tekemät valinnat sitä mukaan, kun niitä kertyy.<br><br> Harkitse nyt seuraavaa mielipidettä:<br><strong>Pitääkö sarjakuvissa olla juoneen liittyvää ankanmetsästystä?</strong>\
-                    <br>Valitsetko KYLLÄ vai EI? Punainen X merkitsee aina EI ja vihreä väkänen tarkoittaa aina KYLLÄ<br>",
-                    "instructsAfterClick": "<br>Tee valintasi nyt kysymykseen:\
+                    "prompt": "<br><strong>OHJE:</strong><br>Kyselyn aikana sinulle esitetään erilaisia mielipiteitä. Harkitse kunkin kysymyksen kohdalla hetki ennen kuin vastaat kannattavasi tai vastustavasi esitettyä mielipidettä. Kun uusi mielipide esitetään, sinua pyydetään osoittamaan oma mielipiteesi klikkaamalla kuvaa. Voit myös käyttää näppäimistön E ja I kirjaimia.<br>Ruudun oikeassa yläkulmassa oleva taulukko näyttää sinun ja muiden tekemät valinnat sitä mukaa, kun niitä kertyy.<br><br> Harkitse nyt seuraavaa mielipidettä:<br><strong>Pitääkö piirroselokuvissa esiintyä ankanmetsästystä?</strong>\
+                    <br>Valitsetko <strong>KYLLÄ</strong> vai <strong>EI</strong>? Huomaa, että punainen X merkitsee aina EI ja vihreä väkänen tarkoittaa aina KYLLÄ.<br>",
+                    /*"instructsAfterClick": "<br>Tee valintasi nyt kysymykseen:\
                     <br>Pitääkö sarjakuvissa olla juoneen liittyvää ankanmetsästystä?\
-                    <br>(Huomio, että punainen X merkitsee aina EI ja vihreä väkänen tarkoittaa aina KYLLÄ.)<br>",
+                    <br>(Huomio, että punainen X merkitsee aina EI ja vihreä väkänen tarkoittaa aina KYLLÄ.)<br>",*/
                     "peer": 0,
-                    "feedbackChoices": "mouse",
-                    "feedbackPrompt": "<br>Hyvä! Seuraavaksi sinua pyydetään arvaamaan muiden henkilöiden valintoja samasta asiasta.",
-                }, {
+                    //"feedbackChoices": "mouse",
+                },		
+				{
                     "peer": 1,
-                    "prompt": "<br>Nyt kun olet valinnut oman kantasi, yritä arvata muiden henkilöiden mielipidettä samasta asiasta.\
-                    <br>Pitääkö sarjakuvissa olla juoneen liittyvää ankanmetsästystä?\
-                    <br>Miten arvelet että ${peer} valitsi?",
+                    "prompt": "<br>Hyvin meni! Nyt kun olet valinnut oman kantasi, yritä arvata muiden henkilöiden mielipidettä samasta asiasta.\
+                    <br><strong>Pitääkö piirroselokuvissa esiintyä ankanmetsästystä?</strong>\
+                    <br><strong>Miten arvelet että ${peer} valitsi?</strong>",
                     'feedbackPrompt': '<br>Saat palautteen muiden henkilöiden mielipiteistä nuolella, joka osoittaa kyseisen henkilön oikean vastauksen esitettyyn kysymykseen.\
-                    <br>Tämä palaute näkyy ruudulla yhden sekunnin ennen kuin voit arvata seuraavan henkilön valintaa. Huomaa, että muiden henkilöiden oikeat vastaukset jäävät näkyviin ruudun oikeassa yläkulmassa olevaan taulukkoon.',
-                    "instructsAfterClick": "<br>Tee valintasi nyt kysymykseen: \
-                    <br>Pitääkö sarjakuvissa olla juoneen liittyvää ankanmetsästystä?\
-                    <br>Miten arvelet että ${peer} valitsi?",
+                    <br>Tämä palaute näkyy ruudulla yhden sekunnin ennen kuin voit arvata seuraavan henkilön valintaa. Huomaa, että muiden henkilöiden oikeat vastaukset jäävät näkyviin ruudun oikeassa yläkulmassa olevaan taulukkoon.<br>Paina nappia jatkaaksesi.',
                     "feedbackChoices": "mouse",
-                }, {
+                },
+				{
                     "peer": 2,
                     "prompt": "<br>Huomaa, että toiset henkilöt voivat olla yksimielisiä tai erimielisiä kunkin esitetyn mielipiteen suhteen.\
-                    <br>Pitääkö sarjakuvissa olla juoneen liittyvää ankanmetsästystä?\
-                    <br>Miten arvelet että ${peer} valitsi?",
-                    'feedbackPrompt': '<br>Voit parantaa omia arvauksiasi tarkkailemalla muiden tekemiä valintoja kokeen aikana.',
+                    <br><strong>Pitääkö piirroselokuvissa esiintyä ankanmetsästystä?</strong>\
+                    <br><strong>Miten arvelet että ${peer} valitsi?</strong>",
+                    'feedbackPrompt': '<br>Huomaa että voit parantaa omia arvauksiasi tarkkailemalla muiden tekemiä valintoja kokeen aikana. Näet kaikki aikaisemmat valinnat ruudun oikeassa yläkulmassa olevasta taulukosta.<br>Paina nappia jatkaaksesi.',
                     "feedbackChoices": "mouse",
                 }, {
                     "phase": "MYSTERY",
-                    "prompt": "<br>Määräajoin (8 kysymyksen välein) näet kahden henkilön valinnat siten, että toinen kannattaa ensimmäistä kuvausta ja toinen toista kuvausta. Heidän valintansa osoitetaan nuolilla. Nämä henkilöt ovat samoja joiden päätöksiä arvioit jo aikaisemmin. Tehtävänäsi on arvioida kuvaukset uudelleen.<br>",
+                    "prompt": "<br>Määräajoin näet kuvauksen kurssista, joka on tarkoitettu täydennyskoulutuksena työssäkäyville henkilöille. Sitten näet kahden henkilön valinnat siten, että toinen kannattaa kurssia ja toinen ei. Heidän valintansa osoitetaan nuolilla.<br><br><strong>Haluatko osallistua kurssille, jossa syödään usein?<br>Väiski ja Repe valitsivat seuraavasti:</strong>",
                     //Select the box you would prefer based on the other participants' choices to continue.
                     "peer1": 1,
                     "peer2": 2,
-                    "mystery_questions": ['Kurssilla vietetään paljon vapaa-aikaa', 'Kurssilla syödään usein'],
+                    "mystery_questions": ['Kurssilla syödään usein'],
                     "response_ends_trial": true,
                 },
             ]
@@ -116,9 +95,14 @@ function practiceGenPoli(opts) {
         "type": "instructions",
         "show_clickable_nav": true,
         "key_forward": " ",
-        "pages": ['<br><br>Harjoitus on nyt ohi. Seuraavaksi aloitamme kyselyn varsinaisilla kysymyksillä, joita on 48 kpl.<br><br><strong>Paina nappia jatkaaksesi.</strong>']
+        "pages": ['<br><br>Harjoitus on nyt ohi. Seuraavaksi jatkamme varsinaisiin kysymyksiin, joita on 48 kpl.<br><br>Paina nappia jatkaaksesi.'],
+		on_load: function() {
+		// Remove progress bar from screen
+			document.getElementById("jspsych-progressbar-container").style.visibility = "visible";
+		}
     };
     timeline.push(info_screen);
+
     return timeline;
 }
 
@@ -128,17 +112,28 @@ var toShuffle = shuffleTogether(stims.stimuli, stims.prompts);
 stims.stimuli = toShuffle[0];
 stims.prompts = toShuffle[1];
 
+var toShuffle = shuffleTogether(stims.main_questions_statement.slice(0,NBLOCKS), stims.main_questions_question.slice(0,NBLOCKS));
+stims.main_questions_statement = toShuffle[0];
+stims.main_questions_question = toShuffle[1];
+
 var timeline = [];
 
 var welcome_block = {
-    type: "text",
-    text: "<div class='center-content'><br><br><br><br>Tervetuloa LEADBEHA kyselyyn!<br><br><p> <strong>Tekniset vaatimukset:</strong><br> Kysely vaatii Javascriptin toimiakseen.<br>Pyydämme varmuuden vuoksi laittamaan mainosten tai skriptien estäjät pois päältä kyselyn ajaksi.</p> <p>Ethän päivitä tai lataa sivua uudestaan kesken kyselyn.<br>Muutoin kysely on aloitettava kokonaan alusta ja kaikki edelliset vastaukset katoavat.</p><p>Klikkaa alla olevaa nappia jatkaaksesi.</p><input type='button' value='Aloita'/>",
-    choices: 'mouse',
+    "type": "instructions",
+    "show_clickable_nav": true,
+    "key_forward": "",	
+    "pages": ["<div class='center-content'><br><br>Tervetuloa LEADBEHA hankkeen kyselyyn!<br><br>Kyselyyn vastaamiseen menee aikaa noin 15 minuuttia. Arvomme viisi 50e arvoista lahjakorttia kaikkien kyselyn loppuun saakka tehneiden kesken.<br><p><strong>Tekniset vaatimukset:</strong><br>Kysely vaatii Javascriptin toimiakseen.<br>Pyydämme varmuuden vuoksi laittamaan mainosten ja skriptien estäjät pois päältä kyselyn ajaksi.</p> <p>Ethän päivitä tai lataa sivua uudestaan kesken kyselyn.<br>Muutoin kysely on aloitettava kokonaan alusta ja edelliset vastaukset katoavat.</p><p>Paina nappia jatkaaksesi."],
+    //choices: 'mouse',
     on_finish: function () {
-        var progress = jsPsych.progress();
-        console.log('You have completed approximately ' + progress.percent_complete + '% of the experiment');
+		;
+        //var progress = jsPsych.progress();
+        //console.log('You have completed approximately ' + progress.percent_complete + '% of the experiment');
         //jsPsych.setProgressBar(0.05)  $('#' + trial.prefix + 'progressbar-container').hide();
-    }
+    },
+	on_load: function() {
+    // Remove progress bar from screen
+    document.getElementById("jspsych-progressbar-container").style.visibility = "hidden";
+	}
 };
 
 var comments_block = {
@@ -153,7 +148,7 @@ var comments_block = {
     ], // we don't really check these
     rows: [4, 5],
     input_type: ['textarea', 'textarea'],
-    preamble: ["<div> Haluaisimme vielä saada yhteystietosi arvontaa varten ja kuulla palautteesi kyselyyn liittyen. Nämä ovat vapaaehtoisia tietoja ja voit siirtyä suoraan eteenpäin.</div>"]
+    preamble: ["<div>Haluamme vielä saada yhteystietosi 50 euron lahjakorttien (5 kpl) arvontaan. Tiedot ovat vapaaehtoisia ja voit halutessasi siirtyä suoraan eteenpäin.</div>"]
 };
 
 var demographics_block = {
@@ -161,7 +156,7 @@ var demographics_block = {
     questions: [
         'Oletko osallistunut täydennyskoulutukseen viimeisen 12kk aikana?',
         'Mikä on sukupuolesi?',
-        'Mikä on korkein tutkintosi?',
+        'Mikä on korkein suorittamasi tutkinto?',
         'Mikä on ikäsi vuosissa?', // number
         'Mikä on ammattisi?', // text
         'Millä toimialla työskentelet?', // text
@@ -169,7 +164,7 @@ var demographics_block = {
     ],
     value: [], // EMPTY IN PRODUCTION
     input_type: ['likert', 'likert', 'likert', 'text', 'text', 'text', 'text'], // ['text','text','text','text']
-    label: [['en', 'kyllä'], ['nainen', 'mies', 'en halua sanoa / muu'], ['peruskoulu', 'ammattikoulu / lukio', 'korkeakoulu', 'lisensiaatti / tohtori', 'muu'], '', '', '', ''], //['','','','']
+    label: [['en', 'kyllä'], ['nainen', 'mies', 'muu/en halua määritellä'], ['peruskoulu', 'ammattikoulu/lukio', 'korkeakoulu, alempi aste', 'korkeakoulu, ylempi aste'], '', '', '', ''], //['','','','']
     validation: [function (x) {
             return (x != 'undefined')
         }, function (x) {
@@ -181,7 +176,7 @@ var demographics_block = {
             if (x == '') {
                 return false;
             };
-            return ((Number(x) <= 90) & (Number(x) >= 18));
+            return ((Number(x) <= 90) & (Number(x) >= 15));
         },
         function (x) {
             return x.length > 0;
@@ -200,13 +195,13 @@ var demographics_block = {
         'täydennyskoulutus puuttuu',
         'sukupuoli puuttuu',
         'tutkinto puuttuu',
-        'ikä virheellinen (oltava valillä 15...90 vuotta)',
+        'ikä virheellinen (oltava välillä 15-90 vuotta)',
         'ammatti puuttuu',
         'toimiala puuttuu',
-        'työelämän pituus virheellinen (oltava välillä 0...80 vuotta)',
+        'työelämän pituus virheellinen (oltava välillä 0-80 vuotta)',
     ],
     preamble: ["<div>\
-        <h4>Osio 1: Taustatiedot ja mielipiteet</h4>Aluksi kysymme sinulta muutamia taustatietoja. Vastaa alla oleviin kysymyksiin ja paina \"Lähetä vastaus\" nappia jatkaaksesi.\
+        <h4>OSIO A: Taustakysymykset</h4>Vastaa alla oleviin kysymyksiin ja paina nappia jatkaaksesi.\
         </div><br>"],
     on_finish: function (trial_data) {
 		var gender = trial_data['Q1_Mikä_on_sukupuolesi?'];
@@ -232,64 +227,75 @@ var demographics_block = {
 
 var likert_and_survey_block = {
     type: 'survey-likert',
-    preamble: '<div>Seuraavat kuvaukset liittyvät työssäkäyvien henkilöiden täydennyskoulutuskursseihin. Kukin kuvaus liittyy yksittäiseen kurssiin, joten arvioi niitä yksi kerrallaan itsenäisesti. Harkitse kutakin kuvausta tarkoin ennen arviotasi. Arvio siis, kuinka paljon haluat osallistua kuvauksen mukaiselle kurssille asteikolla yhdestä kymmeneen (1...10):<br>1 = en missään tapauksessa halua osallistua, ..., 10 = ehdottomasti haluan osallistua</div><br>',
-    questions: main_questions,
+    preamble: '<div><h4>OSIO B: Täydennyskoulutusmieltymykset</h4>Seuraavat kuvaukset liittyvät työssäkäyvien henkilöiden täydennyskoulutuskursseihin. Kukin kuvaus liittyy yksittäiseen kurssiin ja se on tiivistelmä siitä, mikä on kaikkein keskeisintä tuolla kurssilla. Arvio kunkin kurssikuvauksen jälkeen, kuinka paljon haluat osallistua kurssille asteikolla yhdestä kymmeneen (1...10):<br>1 = en missään tapauksessa halua osallistua, ..., 10 = ehdottomasti haluan osallistua</div><br>',
+    questions: stims.main_questions_statement,
     on_finish:
     function () {
         console.log('valittu sukupuoli ' + g)
+		
+		var toShuffle = shuffleTogether(stims.main_questions_statement, stims.main_questions_question);
+		stims.main_questions_statement = toShuffle[0];
+		stims.main_questions_question = toShuffle[1];		
+		
         //var progress = jsPsych.progress();
         //console.log('You have completed approximately '+progress.percent_complete+'% of the experiment');
+		for (var i = 0; i < NBLOCKS; i++) {
+			var stim = stims.stimuli.splice(0, NSTIMS);
+			var prompts = stims.prompts.splice(0, NSTIMS);
+			var peer = peers[g][0].splice(0, NPEERS);
+			var names = peers[g][1].splice(0, NPEERS);
+			var opts = {
+				includeLikert: false,
+				testing: false,
+				stimDir: stims.stimDir,
+				block_num: i,
+				peerAgreement: [50, {
+						percent: 50,
+						ref: "A",
+						func: inverseVotes
+					}, {
+						percent: peerC[i],
+						ref: "B",
+						func: addVotes
+					}
+				],
+				peerCPercent: peerC[i],
+				stim_regex: /.*\/(.*)\.jpg/,
+				prompt_regex: /How (.*) is this.*/,
+				timing: timing,
+				you_timing: you_timing,
+				mystery_questions: stims.main_questions_question[i],
+			};
 
-        var current_stim = 0
-            for (var i = 0; i < NBLOCKS; i++) {
-                var stim = stims.stimuli.splice(0, NSTIMS);
-                var prompts = stims.prompts.splice(0, NSTIMS);
-                var peer = peers[g][0].splice(0, NPEERS);
-                var names = peers[g][1].splice(0, NPEERS);
-                var opts = {
-                    includeLikert: false,
-                    testing: testing,
-                    stimDir: stims.stimDir,
-                    block_num: i,
-                    peerAgreement: [50, {
-                            percent: 50,
-                            ref: "A",
-                            func: inverseVotes
-                        }, {
-                            percent: peerC[i],
-                            ref: "B",
-                            func: addVotes
-                        }
-                    ],
-                    testing: testing,
-                    peerCPercent: peerC[i],
-                    stim_regex: /.*\/(.*)\.jpg/,
-                    prompt_regex: /How (.*) is this.*/,
-                    timing: timing,
-                    you_timing: you_timing,
-                    mystery_questions: [main_questions[current_stim], main_questions[current_stim + 1]]
-                };
+			block = poliTimelineGenNames(stim, prompts, peer, names, opts);			
+			block.type = 'similarity';
+			for (var j = 0; j < block.length; j++) {
+				jsPsych.addNodeToEndOfTimeline(block[j], function () {});
+			}
 
-                block = poliTimelineGenNames(stim, prompts, peer, names, opts);
-                block.type = 'similarity';
-                for (var j = 0; j < block.length; j++) {
-                    jsPsych.addNodeToEndOfTimeline(block[j], function () {});
-                }
-
-                lblock = {
-                    type: 'survey-likert',
-                    preamble: 'Arvio kuinka paljon haluat osallistua kuvauksen mukaiselle kurssille asteikolla yhdestä kymmeneen (1...10):<br>1 = en missään tapauksessa halua osallistua, ..., 10 = ehdottomasti haluan osallistua<br>',
-                    questions: [main_questions[current_stim], main_questions[current_stim + 1]],
-                    location_after: "#jspsych-stim", // put likert after main block, not sidebar table
-                    //display_element: $("#jspsych-stim"),  // DOES NOT WORK
-                }
-                jsPsych.addNodeToEndOfTimeline(lblock)
-                console.log('Block ' + String(i) + ': question 1 = ' + opts.mystery_questions[0] + ', question 2 = ' + opts.mystery_questions[1])
-
-                current_stim = current_stim + 2 // proceed by two
-            }
-            jsPsych.addNodeToEndOfTimeline(comments_block);
-        //console.log('You have completed approximately '+progress.percent_complete+'% of the experiment');
+			lblock = {
+				type: 'survey-likert',
+				preamble: 'Arvio kuinka paljon haluat osallistua kuvauksen mukaiselle kurssille asteikolla yhdestä kymmeneen (1...10):<br>1 = en missään tapauksessa halua osallistua, ..., 10 = ehdottomasti haluan osallistua<br>',
+				questions: [stims.main_questions_statement[i]],
+				location_after: "#jspsych-stim", // put likert after main block, not under sidebar table
+				//display_element: $("#jspsych-stim"),  // DOES NOT WORK
+				on_finish: function () {
+					try {
+						var data = jsPsych.data.getDataAsCSV();
+						jsPsych.data.localSave(filename, 'csv');
+					} catch (e) {
+						console.log('ERROR: data saving failed.')
+					}
+				}
+				
+			}
+			jsPsych.addNodeToEndOfTimeline(lblock)			
+	
+		}
+			
+		jsPsych.addNodeToEndOfTimeline(comments_block);
+			//console.log('You have completed approximately '+progress.percent_complete+'% of the experiment');					
+		
     },
 };
 
@@ -297,7 +303,7 @@ var fullscreen_block = {
     "type": "instructions",
     "show_clickable_nav": true,
     "key_forward": "",
-    "pages": ['<h4>Osio 2: Väitelauseiden arviointi</h4>Seuraavaksi arvioit erilaisia väitelauseita liittyen täydennyskoulutuksiin. Aloitamme harjoitusosuudella, jossa neuvotaan kuinka arviointi tehdään.<br><strong>Ole hyvä ja siirry nyt kokoruudun tilaan, jos et jo ole sellaisessa</strong>.<br>Tämä tapahtuu painamalla F11 näppäintä tai valitsemalla selainikkunan reunasta kokoruudun tilan.<br><br><strong>Paina nappia jatkaaksesi.</strong>'],
+    "pages": ['<h4>OSIO C: Mielipiteitä täydennyskoulutuskurssien ominaisuuksista</h4>Seuraavat kysymykset liittyvät työssäkäyvien henkilöiden täydennyskoulutuskurssien yleisiin ominaisuuksiin.<br>Aloitamme harjoitusosuudella.<br><br>Ole hyvä ja siirry nyt kokoruudun tilaan, ellet jo ole sellaisessa.<br>Tämä tapahtuu painamalla F11 näppäintä tai valitsemalla selainikkunan reunasta kokoruudun tilan.<br><br>Paina nappia jatkaaksesi.'],
     "on_finish": function () {
 		;
         //var progress = jsPsych.progress();
@@ -319,44 +325,29 @@ var practice_warning_block = {
 
 timeline.push(welcome_block);
 timeline.push(demographics_block);
-
-main_questions.shuffle() // ask again in different order
 timeline.push(likert_and_survey_block);
 timeline.push(fullscreen_block);
-//timeline.push(practice_warning_block);
-
+//timeline.push(practice_warning_block); NOT NEEDED
 timeline.push.apply(timeline, practice_timeline); // appending list to list
 
 peerC.shuffle();
 
 jsPsych.pluginAPI.preloadImages(stims, function () {
-    if (testing) {
-        timeline = [id_block, demo_block];
-        var fs = false;
-    } else {
-        var fs = true; // WAS true;
-    }
     jsPsych.init({
         timeline: timeline,
         show_progress_bar: true,
-        fullscreen: fs,
-        on_finish: function () {
-            var data = jsPsych.data.getDataAsCSV();
-
+        fullscreen: true, // WAS true;
+        on_finish: function () {            
             try {
-                var d = jsPsych.data.getDataAsJSON({
-                    trial_type: 'survey-text'
-                })
+				var data = jsPsych.data.getDataAsCSV();
+                jsPsych.data.localSave(filename, 'csv');
             } catch (e) {
-                console.log('ERROR: Could not retrieve data on finishing!')
+                console.log('ERROR: data saving failed.')
             }
 
             $('#jspsych-content').empty()
             .css('visibility', 'visible')
-            .html('Kysely on ohi ja tiedot tallennettu! Kiitos osallistumisestasi ja kärsivällisyydestäsi.<br><br>' + subjID);
-
-            var filename = subjID + '_' + study + '.csv';
-            jsPsych.data.localSave(filename, 'csv');
+            .html('<br>Kysely on nyt ohi ja tiedot tallennettu.<br><br>Suuri kiitos osallistumisestasi!');
 
         }
     });

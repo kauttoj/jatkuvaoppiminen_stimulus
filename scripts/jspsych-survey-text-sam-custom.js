@@ -179,14 +179,14 @@ jsPsych.plugins['survey-text-sam'] = (function() {
 			if (trial.input_type[index] == "text") {
 				var val = $(this).children('input').val();
 				id = $(this).children('input').data('question-id')
-				console.log(val);
+				//console.log(val);
 			} else if (trial.input_type[index] == "textarea") {
-				console.log('textarea');
+				//console.log('textarea');
 				var val = $(this).children('textarea').val();
 				id = $(this).children('textarea').data('question-id')
-				console.log(val);			
+				//console.log(val);			
 			} else {
-				console.log('BAD DATA TYPE!!!')
+				;//console.log('BAD DATA TYPE!')
 			}
 			var resp = trial.validation[index](val);
 			//console.log(resp);

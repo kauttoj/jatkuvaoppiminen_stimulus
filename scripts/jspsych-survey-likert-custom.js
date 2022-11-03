@@ -62,7 +62,7 @@ jsPsych.plugins['survey-likert'] = (function () {
         // hack to force specific location
 		var need_end_div = false
         if (typeof trial.location_after !== 'undefined') {
-            console.log('using custom display_elements')
+            //console.log('using custom display_elements')
             display_element = $(trial.location_after)
                 display_element.addClass('jspsych-display-element');
         } else {		
@@ -81,7 +81,7 @@ jsPsych.plugins['survey-likert'] = (function () {
                 "class": 'jspsych-survey-likert-preamble'
             }));
 
-        $('#jspsych-survey-likert-preamble').html(trial.preamble + '<br>');
+        $('#jspsych-survey-likert-preamble').html(trial.preamble);
 		
 		display_element.append('<form id="jspsych-survey-likert-form">');
 		form_element = $('#jspsych-survey-likert-form');
@@ -89,7 +89,11 @@ jsPsych.plugins['survey-likert'] = (function () {
 		for (var i = 0; i < trial.questions.length; i++) {
 		  
 		  // add question
-		  form_element.append('<div class="jspsych-survey-likert-statement" align="left">' + '<strong>' + String(i+1) + ". " + trial.questions[i]) + '</strong>';
+		  if (trial.questions.length>1) {
+			form_element.append('<div class="jspsych-survey-likert-statement" align="left">' + '<strong>' + String(i+1) + ". " + trial.questions[i]) + '</strong>';
+		  } else {
+			form_element.append('<div class="jspsych-survey-likert-statement" align="left">' + '<strong>' + trial.questions[i]) + '</strong>';			  
+		  }
 		  // add options
 		  var width = 100 / trial.labels.length;
 		  var question_id = 'Q' + i + '_' + trial.questions[i].replaceAll(' ','_')
@@ -150,48 +154,3 @@ jsPsych.plugins['survey-likert'] = (function () {
 
     return plugin;
 })();
-
-/*
-        // add submit button
-        display_element.append($('<button>', {
-                'id': 'jspsych-survey-likert-next',
-                'class': 'jspsych-survey-likert jspsych-btn'
-            }));
-        $("#jspsych-survey-likert-next").html('Submit Answers');
-        $("#jspsych-survey-likert-next").click(function () {
-            // measure response time
-            var endTime = (new Date()).getTime();
-            var response_time = endTime - startTime;
-
-            // create object to hold responses
-            var question_data = {};
-            $("#jspsych-survey-likert-form .jspsych-survey-likert-opts").each(function (index) {
-                var id = $(this).data('radio-group');
-                var response = $('input[name="' + id + '"]:checked').val();
-                if (typeof response == 'undefined') {
-                    response = -1;
-                }
-                var obje = {};
-                obje[id] = response;
-                $.extend(question_data, obje);
-            });
-
-            // save data
-            var trial_data = {
-                "rt": response_time,
-                "responses": JSON.stringify(question_data)
-            };
-
-            display_element.html('');
-
-            // next trial
-            jsPsych.finishTrial(trial_data);
-        });
-
-        var startTime = (new Date()).getTime();
-    };	
-	
-
-    return plugin;
-})();
-*/

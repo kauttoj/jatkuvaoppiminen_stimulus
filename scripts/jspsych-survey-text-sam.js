@@ -8,7 +8,6 @@
  *
  */
 
-
 jsPsych.plugins['survey-text-sam'] = (function() {
 
     var plugin = {};
@@ -195,25 +194,26 @@ jsPsych.plugins['survey-text-sam'] = (function() {
 	    var endTime = (new Date()).getTime();
 	    var response_time = endTime - startTime;
 
+
 	    // create object to hold responses
 	    var question_data = {};
 	    $("div.jspsych-survey-text-question").each(function(index) {
-		var id = "Q" + index;
-		if (trial.input_type[index] == "text") {
-		    var val = $(this).children('input').val();
-		} else if (trial.input_type[index] == "textarea") {
-		    console.log('textarea');
-		    var val = $(this).children('textarea').val();
-		} else if (trial.input_type[index] == "likert") {
-		    console.log('likert');
-			var id = $(this).data('radio-group');
-			var val = $('input[name="' + id + '"]:checked').val();		
-		} else {
-		    var val = $(this).children('input').val();
-		}
-		var obje = {};
-		obje[id] = val;
-		$.extend(question_data, obje);
+			var id = "Q" + index;
+			if (trial.input_type[index] == "text") {
+				var val = $(this).children('input').val();
+			} else if (trial.input_type[index] == "textarea") {
+				console.log('textarea');
+				var val = $(this).children('textarea').val();
+			} else if (trial.input_type[index] == "likert") {
+				console.log('likert');
+				var id = $(this).data('radio-group');
+				var val = $('input[name="' + id + '"]:checked').val();		
+			} else {
+				var val = $(this).children('input').val();
+			}
+			var obje = {};
+			obje[id] = val;
+			$.extend(question_data, obje);
 	    });
 
 	    // save data

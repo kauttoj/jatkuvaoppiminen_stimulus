@@ -170,7 +170,7 @@ jsPsych.plugins.similarity = (function () {
         //(typeof trial.show_ticks === 'undefined')	? false : trial.show_ticks;
 
         trial.show_response = trial.show_response || "SECOND_STIMULUS";
-        trial.mystery = trial.mystery || ['img/mystery1.jpg', 'img/mystery2.jpg'];
+        trial.mystery = trial.mystery || ['img/big_yes.jpg', 'img/big_no.jpg'];
 
         trial.timing_post_trial = (typeof trial.timing_post_trial === 'undefined') ? 1000 : trial.timing_post_trial; // default 1000ms
         trial.timing_image_gap = trial.timing_image_gap || 1000; // default 1000ms
@@ -437,6 +437,7 @@ jsPsych.plugins.similarity = (function () {
                             }
                         }));
                 }
+				
             }
             $('#jspsych-stim').css('visibility', 'visible');
         }
@@ -483,13 +484,13 @@ jsPsych.plugins.similarity = (function () {
                 var max_t = Math.max(trial.timeoutBeforePrompt, trial.timeoutBeforeStim);
                 custTimeout(startKeyListener, trial.timeoutBeforeResponse + max_t);								
 				
-				if (trial.practice == false) {
-					custTimeout(startImgClickListener, trial.timeoutBeforeResponse + max_t);					
-				}
+				//if (trial.practice == false) {
+				custTimeout(startImgClickListener, trial.timeoutBeforeResponse + max_t);					
+				//}
             }
 
             //$(display_element).css('visibility', 'visible');
-
+/*
             if (trial.practice == true && trial.phase != "MYSTERY") {
                 var mouse_listener_instructs = function (e) {
                     function setTrialInstructs() {
@@ -510,21 +511,23 @@ jsPsych.plugins.similarity = (function () {
                 //console.log('askpref');
                 appendContinue(mouse_listener_instructs, trial.trialButtonLabel);
             }
+			*/
         }
 
         function askMystery() {
             writePrompt();
-            /*
             for(var i = 0; i < trial.stimuli.length; i++) {
-            $('#jspsych-choice_' + i).html($('<img>', {
-            src: trial.stimDir + trial.mystery[i],
-            class: 'stim mystery' ,
-            }));
-            $('#jspsych-sub-label_' + i).empty()
+				$('#jspsych-choice_' + i).html($('<img>', {
+				src: trial.stimDir + trial.mystery[i],
+				class: 'stim mystery' ,
+				border: '1px solid',
+				"border-color": 'gray',
+				}
+				));
+				$('#jspsych-sub-label_' + i).empty()
             }
-             */
-            ////////////////					
-
+            ////////////////
+			/*
             $('#jspsych-label_' + 0).html($('<p>', {
                     text: trial.mystery_questions[0],
                     css: {
@@ -541,33 +544,51 @@ jsPsych.plugins.similarity = (function () {
                         color: 'black',
                     }
                 }));
-
+			*/
             /////////////// document.getElementById(  == $(
 
             /*
             for(var i = 0; i < trial.stimuli.length; i++) {
-            var label = '';
-            $('#jspsych-label_' + i).html($('<p>', {
-            text: trial.choices[i].toUpperCase(),
-            css: {
-            margin: '0px',
-            height: '25px',
+				var label = '';
+				$('#jspsych-label_' + i).html($('<p>', {
+				text: trial.choices[i].toUpperCase(),
+				css: {
+					margin: '0px',
+					height: '25px',
+				}
+				}));
             }
-            }));
-            }
-             */
-
-            //tbl = create_table()
-            //display_element.append('<p>');
-            //display_element.append(tbl);
+			*/
+						
+			var arrows=['KYLLÄ','EI'] // get correct order of yes and no
+			var lab;
+			for(var i = 0; i < trial.stimuli.length; i++) {
+				if (trial.mystery[i].indexOf('xes') >= 0) {
+					lab = "EI";
+					arrows[i]=lab
+				} else if (trial.mystery[i].indexOf('oes') >= 0) {
+					lab = "KYLLÄ";
+					arrows[i]=lab
+				}				
+				$('#jspsych-sub-label_' + i).empty().append(
+					$('<p>', {
+						text: lab,
+						css: {
+							margin: '0px',
+							height: '25px',
+							color: 'gray',
+						}
+					}));
+			}						
 
             $('#jspsych-peer').html(
                 $('<div>', {
                     id: 'jspsych-peer-pic'
                 }).append(
                     $('<img>', {
-                        src: trial.peerDir + 'arrowL.jpg',
-                        width: '20%',
+                        src: trial.peerDir + (arrows[0]=='KYLLÄ' ? 'greenarrowL.png' : 'redarrowL.png'),// 'arrowL.jpg'
+                        width: '10%',
+						id: 'arrow_imageL',
 						style:"vertical-align: top;",
                     })).append(
                     $('<div>', {
@@ -593,8 +614,9 @@ jsPsych.plugins.similarity = (function () {
                         })).append(
                         $('<p>').text(trial.names[trial.peer2]))).append(
                     $('<img>', {
-                        src: trial.peerDir + 'arrowR.jpg',
-                        width: '20%',
+                        src: trial.peerDir + (arrows[1]=='KYLLÄ' ? 'greenarrowR.png' : 'redarrowR.png'), //'redarrowR.png', // 'arrowR.jpg'
+                        width: '10%',
+						id: 'arrow_imageR',
 						style:"vertical-align: top;",
                     }))).append(
                 $('<p>', {
@@ -609,42 +631,47 @@ jsPsych.plugins.similarity = (function () {
             });
             $('#jspsych-peer-pic>img').css({
                 'width': '20%'
-            });
+            });	
+			$('#arrow_imageL')[0].style.width='10%'
+			$('#arrow_imageR')[0].style.width='10%'
 			
+			$('#jspsych-label_0').html('')
+			$('#jspsych-label_1').html('')			
+			
+			/*
 			// DO NOT SHOW IMAGES
 			$('#jspsych-choice_0').html('')
 			$('#jspsych-choice_1').html('')
 			// set 50-50 for labels or long texts will be mess.
-			$('#jspsych-label_0').width('50%')
-			$('#jspsych-label_1').width('50%')
 			// there is no "yes" or "no" here
 			$('#jspsych-sub-label_0').html('')
 			$('#jspsych-sub-label_1').html('')
+			*/
 			// add some space after labels
 			$('#jspsych-stim_table').after('<br>')
 			
 			if (trial.practice) {
 				// we add likert example questions here
-				$('#jspsych-stim').append('Arvio kuinka paljon haluat osallistua kuvauksen mukaiselle kurssille asteikolla yhdestä kymmeneen (1...10). (1=en missään tapauksessa halua osallistua ... 10 = ehdottomasti haluan osallistua)')
+				$('#jspsych-stim').append('Sitten tämä sama kurssikuvaus esitetään uudelleen ja sinun tehtävänäsi on arvioida se. Arvio kurssikuvauksen jälkeen, kuinka paljon haluat osallistua kurssille asteikolla yhdestä kymmeneen  (1...10).<br>(1=en missään tapauksessa halua osallistua ... 10 = ehdottomasti haluan osallistua)<br>')
 				$('#jspsych-stim').append('<form id="jspsych-survey-likert-form">');
-				questions = ['Kurssilla vietetään paljon vapaa-aikaa','Kurssilla syödään paljon']
+				questions = trial.mystery_questions //['Kurssilla syödään paljon']
 				// add likert scale questions
 				for (var i = 0; i < questions.length; i++) {
 				  // add question
-				  $('#jspsych-survey-likert-form').append('<div class="jspsych-survey-likert-statement" align="left">' + '<strong>' + String(i+1) + ". " + questions[i]) + '</strong>';
+				  $('#jspsych-survey-likert-form').append('<div class="jspsych-survey-likert-statement" align="left">' + '<strong>' + questions[i]) + '</strong>';
 				  // add options
 				  var width = 10;
 				  var question_id = 'Q' + i
 				  options_string = '<ul class="jspsych-survey-likert-opts" data-radio-group="' + question_id + '">';
 				  options_string += '1 '
 				  for (var j = 0; j < 10; j++) {
-					options_string += '<input type="radio" name="' + question_id + '" value="' + j + '" style="height:25px; width:25px; vertical-align: middle;" disabled><label class="jspsych-survey-likert-opt-label">' + "   " + '</label>';
+					options_string += '<input type="radio" name="' + question_id + '" value="' + j + '" style="height:25px; width:25px; vertical-align: middle;"><label class="jspsych-survey-likert-opt-label">' + "   " + '</label>';
 				  }
 				  options_string += ' 10'
 				  options_string += '</ul></div><br>';
 				  $('#jspsych-survey-likert-form').append(options_string);			 
 				}					
-				$('#jspsych-survey-likert-form').append('Näiden esimerkkien jälkeen voit aloittaa kyselyn toisen jakson.');
+				$('#jspsych-survey-likert-form').append('Paina nappia jatkaaksesi.');
 			}
 
             $('#jspsych-stim').css('visibility', 'visible');
@@ -803,8 +830,12 @@ jsPsych.plugins.similarity = (function () {
                     }
 
                     if (trial.feedbackPrompt) {
-                        //console.log('yes, feedbackPrompt');
-                        $('#jspsych-prompt').html(trial.feedbackPrompt);
+						$('#jspsych-prompt').html(
+							$('<p>', {
+								html: trial.feedbackPrompt,
+								css: {}
+							})).addClass('practice');												
+                        //$('#jspsych-prompt').html(trial.feedbackPrompt).addClass('practice'); // this leads to ugly bolded font
 
                         if (trial.feedbackChoices == 'mouse' || trial.feedbackChoices == 'click') {
                             //console.log('yes, feedbackChoices is mouse or click');
@@ -818,19 +849,23 @@ jsPsych.plugins.similarity = (function () {
                     }
                 }
 
-                if (trial_data.peerSide == 'left') {
-                    $('#jspsych-peer-pic').prepend(
-                        $('<img>', {
-                            src: trial.peerDir + 'arrowL.jpg',
-                            class: 'peer',
-                        }));
-                } else {
-                    $('#jspsych-peer-pic').append(
-                        $('<img>', {
-                            src: trial.peerDir + 'arrowR.jpg',
-                            class: 'peer',
-                        }));
-                }
+				if (!trial.practice || trial.phase!='FIRST') {
+					if (trial_data.peerSide == 'left') {
+						$('#jspsych-peer-pic').prepend(
+							$('<img>', {
+								src: trial.peerDir + 'arrowL.jpg',
+								class: 'peer',
+								style:"vertical-align: top;",
+							}));
+					} else {
+						$('#jspsych-peer-pic').append(
+							$('<img>', {
+								src: trial.peerDir + 'arrowR.jpg',
+								class: 'peer',
+								style:"vertical-align: top;",
+							}));
+					}
+				}
 
             } else {
                 custTimeout(function () {
@@ -960,6 +995,7 @@ jsPsych.plugins.similarity = (function () {
             if ((trial.phase == "MYSTERY")) {
                 trial_data['mysteryRespKey'] = respKey;
                 // Chosen mystery peer
+				/*
                 trial_data['mysteryPeerChosenImg'] = trial.peers[mysteryPeers[respChoiceNum]];
                 trial_data['mysteryPeerChosenName'] = trial.names[mysteryPeers[respChoiceNum]];
                 trial_data['mysteryLabelChosen'] = trial.peer_label[mysteryPeers[respChoiceNum]];
@@ -973,6 +1009,10 @@ jsPsych.plugins.similarity = (function () {
                 } else {
                     trial_data['ACC'] = 0;
                 }
+				*/
+				trial_data['mysteryLeftImg'] = trial.mystery[0]
+				trial_data['mysteryRightImg'] = trial.mystery[1]
+				trial_data["stimuli"] = JSON.stringify(trial.mystery)
             }
 
             for (var i = 0; i < trial.peers.length; i++) {
