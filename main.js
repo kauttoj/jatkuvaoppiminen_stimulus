@@ -11,21 +11,22 @@ var g; // gender variable
 
 var peerC = [12.5, 87.5].rep(4); // 4 blocks, half-and-half
 
+var timesplit = 10.0; // 1 in production
 var timing = {
     timeoutBeforePrompt: 0,
     timeoutBeforeStim: 0,
-    timeoutBeforeResponse: 1000, // Before they can make resp after prompt/stim, WAS 1000
-    timeoutBeforeMystery: 1750, // WAS 2000
+    timeoutBeforeResponse: 1000/timesplit, // Before they can make resp after prompt/stim, WAS 1000
+    timeoutBeforeMystery: 1750/timesplit, // WAS 2000
     timeoutBeforeFeedback: 0, // This is evil. Don't use it
-    timeoutAfterFeedback: 1000, // WAS 1000
+    timeoutAfterFeedback: 1000/timesplit, // WAS 1000
     timeoutAfterFeedbackMystery: 1000, // WAS 1000
-    timing_post_trial: 500, // WAS 500
+    timing_post_trial: 500/timesplit, // WAS 500
 };
 
 var you_timing = {
     timeoutBeforePrompt: 0,
     timeoutBeforeStim: 0,
-    timeoutBeforeResponse: 2000, // Before they can make resp after prompt/stim, WAS 2000
+    timeoutBeforeResponse: 2000/timesplit, // Before they can make resp after prompt/stim, WAS 2000
 };
 
 //ONLY TEXT, PREAMBLES, AND HTML SHOULD BE CHANGED BEYOND THIS POINT.
@@ -34,6 +35,20 @@ var peers = {
     'm': males,
     'a': mixed_genders
 };
+
+// SQL save helper function
+function saveData(data) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'write_data.php'); // change 'write_data.php' to point to php script.
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function() {
+    if(xhr.status == 200){
+      var response = JSON.parse(xhr.responseText);
+      console.log("XML server response " + String(response.success));
+    }
+  };
+  xhr.send(data);
+}
 
 //Use this to edit instruction prompts
 function practiceGenPoli(opts) {
@@ -280,11 +295,11 @@ var likert_and_survey_block = {
 				location_after: "#jspsych-stim", // put likert after main block, not under sidebar table
 				//display_element: $("#jspsych-stim"),  // DOES NOT WORK
 				on_finish: function () {
-					try {
-						var data = jsPsych.data.getDataAsCSV();
-						jsPsych.data.localSave(filename, 'csv');
+					try {											
+						saveData(jsPsych.data.getDataAsJSON())						
+						//jsPsych.data.localSave(filename, 'csv');
 					} catch (e) {
-						console.log('ERROR: data saving failed.')
+						console.log('data save failed!')
 					}
 				}
 				
@@ -338,12 +353,12 @@ jsPsych.pluginAPI.preloadImages(stims, function () {
         show_progress_bar: true,
         fullscreen: true, // WAS true;
         on_finish: function () {            
-            try {
-				var data = jsPsych.data.getDataAsCSV();
-                jsPsych.data.localSave(filename, 'csv');
-            } catch (e) {
-                console.log('ERROR: data saving failed.')
-            }
+			try {											
+				saveData(jsPsych.data.getDataAsJSON())						
+				//jsPsych.data.localSave(filename, 'csv');
+			} catch (e) {
+				console.log('data save failed!')
+			}
 
             $('#jspsych-content').empty()
             .css('visibility', 'visible')
