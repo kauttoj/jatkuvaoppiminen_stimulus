@@ -5,9 +5,9 @@ var NPEERS = 3; // 3
 
 var subjID = getSubjID(8);
 var filename = subjID + '_' + study + '.csv';
+var subject_id_property = {'subjID':subjID} // we add this to all data
 
-var block;
-var g; // gender variable
+var g; // global gender variable
 
 var peerC = [12.5, 87.5].rep(4); // 4 blocks, half-and-half
 
@@ -35,20 +35,6 @@ var peers = {
     'm': males,
     'a': mixed_genders
 };
-
-// SQL save helper function
-function saveData(data) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', 'write_data.php'); // change 'write_data.php' to point to php script.
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.onload = function() {
-    if(xhr.status == 200){
-      var response = JSON.parse(xhr.responseText);
-      console.log("XML server response " + String(response.success));
-    }
-  };
-  xhr.send(data);
-}
 
 //Use this to edit instruction prompts
 function practiceGenPoli(opts) {
@@ -139,28 +125,55 @@ var welcome_block = {
     "key_forward": "",	
     "pages": ["<div class='center-content'><br><br>Tervetuloa LEADBEHA hankkeen kyselyyn!<br><br>Kyselyyn vastaamiseen menee aikaa noin 15 minuuttia. Arvomme viisi 50e arvoista lahjakorttia kaikkien kyselyn loppuun saakka tehneiden kesken.<br><p><strong>Tekniset vaatimukset:</strong><br>Kysely vaatii Javascriptin toimiakseen.<br>Pyydämme varmuuden vuoksi laittamaan mainosten ja skriptien estäjät pois päältä kyselyn ajaksi.</p> <p>Ethän päivitä tai lataa sivua uudestaan kesken kyselyn.<br>Muutoin kysely on aloitettava kokonaan alusta ja edelliset vastaukset katoavat.</p><p>Paina nappia jatkaaksesi."],
     //choices: 'mouse',
-    on_finish: function () {
-		;
+    on_finish: function (trial_data) {
+		console.log('test')
         //var progress = jsPsych.progress();
         //console.log('You have completed approximately ' + progress.percent_complete + '% of the experiment');
         //jsPsych.setProgressBar(0.05)  $('#' + trial.prefix + 'progressbar-container').hide();
     },
 	on_load: function() {
     // Remove progress bar from screen
-    document.getElementById("jspsych-progressbar-container").style.visibility = "hidden";
+		document.getElementById("jspsych-progressbar-container").style.visibility = "hidden";
 	}
 };
 
+// SQL save helper function
+function saveData(data) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'write_data.php'); // change 'write_data.php' to point to php script.
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function() {
+    if(xhr.status == 200){
+      var response = JSON.parse(xhr.responseText);
+      console.log("XML server response " + String(response.success));
+    }
+  };
+  xhr.send(data);
+}
+
+// forced saving block
+var savetrial_block = {
+  type: 'call-function',
+  async: true,
+  func: function(){
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'write_data.php');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function() {
+      if(xhr.status == 200){
+        var response = JSON.parse(xhr.responseText);
+        console.log("XML server response " + String(response.success));
+      }
+    };
+	jsPsych.data.addProperties(subject_id_property);
+    xhr.send(jsPsych.data.getDataAsJSON());
+  }
+}
+
 var comments_block = {
     type: 'survey-text-sam',
-    questions: ['Jos haluat osallistua arvontaan, syötä email osoitteesi tai muu haluamasi yhteystieto', 'Avoimet kommentit ja palaute'],
-    //value: MID,
-    validation: [function (x) {
-            return true
-        }, function (x) {
-            return true
-        }
-    ], // we don't really check these
+    questions: ['Jos haluat osallistua arvontaan, syötä email osoitteesi tai muu haluamasi yhteystieto', 'Avoimet kommentit ja palaute'],	
+    validation: [function (x) {return true}, function (x) {return true}], // we don't really check these
     rows: [4, 5],
     input_type: ['textarea', 'textarea'],
     preamble: ["<div>Haluamme vielä saada yhteystietosi 50 euron lahjakorttien (5 kpl) arvontaan. Tiedot ovat vapaaehtoisia ja voit halutessasi siirtyä suoraan eteenpäin.</div>"]
@@ -295,8 +308,9 @@ var likert_and_survey_block = {
 				location_after: "#jspsych-stim", // put likert after main block, not under sidebar table
 				//display_element: $("#jspsych-stim"),  // DOES NOT WORK
 				on_finish: function () {
-					try {											
-						saveData(jsPsych.data.getDataAsJSON())						
+					try {										
+						jsPsych.data.addProperties(subject_id_property) // add subjID to all rows					
+						saveData(jsPsych.data.getDataAsJSON())									
 						//jsPsych.data.localSave(filename, 'csv');
 					} catch (e) {
 						console.log('data save failed!')
@@ -307,9 +321,10 @@ var likert_and_survey_block = {
 			jsPsych.addNodeToEndOfTimeline(lblock)			
 	
 		}
-			
+					
 		jsPsych.addNodeToEndOfTimeline(comments_block);
-			//console.log('You have completed approximately '+progress.percent_complete+'% of the experiment');					
+		jsPsych.data.addProperties(subject_id_property);
+		jsPsych.addNodeToEndOfTimeline(savetrial_block); // force save before proceeding
 		
     },
 };
@@ -321,8 +336,6 @@ var fullscreen_block = {
     "pages": ['<h4>OSIO C: Mielipiteitä täydennyskoulutuskurssien ominaisuuksista</h4>Seuraavat kysymykset liittyvät työssäkäyvien henkilöiden täydennyskoulutuskurssien yleisiin ominaisuuksiin.<br>Aloitamme harjoitusosuudella.<br><br>Ole hyvä ja siirry nyt kokoruudun tilaan, ellet jo ole sellaisessa.<br>Tämä tapahtuu painamalla F11 näppäintä tai valitsemalla selainikkunan reunasta kokoruudun tilan.<br><br>Paina nappia jatkaaksesi.'],
     "on_finish": function () {
 		;
-        //var progress = jsPsych.progress();
-        //console.log('You have completed approximately ' + progress.percent_complete + '% of the experiment');
     }
 };
 
@@ -337,6 +350,7 @@ var practice_warning_block = {
         console.log('You have completed approximately ' + progress.percent_complete + '% of the experiment');
     }
 };
+
 
 timeline.push(welcome_block);
 timeline.push(demographics_block);
@@ -354,7 +368,7 @@ jsPsych.pluginAPI.preloadImages(stims, function () {
         fullscreen: true, // WAS true;
         on_finish: function () {            
 			try {											
-				saveData(jsPsych.data.getDataAsJSON())						
+				saveData(jsPsych.data.getDataAsJSON()) // last save				
 				//jsPsych.data.localSave(filename, 'csv');
 			} catch (e) {
 				console.log('data save failed!')
