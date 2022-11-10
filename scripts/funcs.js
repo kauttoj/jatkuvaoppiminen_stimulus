@@ -620,8 +620,8 @@ function poliTimelineGenNames(stims, prompts, peers, names, opts) {
 	    peer_agree.push(calcAgreement(peerAgreement,stims.length,i));
 	} else if (typeof pa == "object") {
 	    pa.func	= pa.func	|| inverseVotes;
-	    pa.ref	= pa.ref	|| "A";
-	    pa.percent	= pa.percent	|| 75;
+	    pa.ref	= pa.ref	|| "A";		
+	    pa.percent	= pa.percent==0 ? 0 : (pa.percent	|| 75);
 	    pa.opts	= pa.opts	|| {};
 	    var peer = peer_agree[peerLabels.indexOf(pa.ref)];
 	    peer_agree.push(pa.func(peer, pa.percent, pa.opts));

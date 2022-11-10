@@ -8,7 +8,6 @@
  *
  */
 
-
 jsPsych.plugins['survey-text-sam'] = (function() {
 
     var plugin = {};
@@ -210,31 +209,7 @@ jsPsych.plugins['survey-text-sam'] = (function() {
 	    // measure response time
 	    var endTime = (new Date()).getTime();
 	    var response_time = endTime - startTime;
-
-		// we already have the responses, no point building again
-		/*
-	    // create object to hold responses
-	    var question_data = {};
-	    $("div.jspsych-survey-text-question").each(function(index) {
-			var id = "Q" + index;
-			if (trial.input_type[index] == "text") {
-				var val = $(this).children('input').val();
-			} else if (trial.input_type[index] == "textarea") {
-				console.log('textarea');
-				var val = $(this).children('textarea').val();
-			} else if (trial.input_type[index] == "likert") {
-				console.log('likert');
-				var id = $(this).data('radio-group');
-				var val = $('input[name="' + id + '"]:checked').val();		
-			} else {
-				var val = $(this).children('input').val();
-			}
-			var obje = {};
-			obje[id] = val;
-			$.extend(question_data, obje);
-	    });
-		*/
-		
+	
 		var question_data = {};
 		var current_index = 0
 		$("#jspsych-survey-likert-form .jspsych-survey-likert-opts").each(function (index) {
@@ -258,13 +233,25 @@ jsPsych.plugins['survey-text-sam'] = (function() {
 			}
 			question_data[id] = val;
 	    });		
+		question_data["navigator"] = 'unknown'
+		try {
+			question_data["navigator"] = String(navigator.userAgent);
+		} catch {
+			;
+		}
 
 	    // save data
 	    var trialdata = {
-		"rt": response_time,
-		"responses": JSON.stringify(resp),
+			"rt": response_time,
+			"responses": JSON.stringify(resp),
 	    };
-	    $.extend(trialdata, question_data); // don't add new columns, responses already in single column
+		question_data_final = {};
+		for (const [key, value] of Object.entries(question_data)) {
+			if (key.includes('sukupuol')) { // HARD-CODED, not good for general use!
+				question_data_final['gender']=value;
+			}
+		}				
+	    $.extend(trialdata,question_data_final);
 
 	    display_element.html('');
 

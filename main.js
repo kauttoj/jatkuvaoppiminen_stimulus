@@ -7,9 +7,9 @@ var subjID = getSubjID(8);
 var filename = subjID + '_' + study + '.csv';
 var subject_id_property = {'subjID':subjID} // we add this to all data
 
-var g; // global gender variable
+var g = 'a'; // global gender variable, set to mixed by default
 
-var peerC = [12.5, 87.5].rep(4); // 4 blocks, half-and-half
+var peerC = [25,75].rep(Math.ceil(NBLOCKS/2)); // half-and-half, WAS [12.5, 87.5]
 
 var timesplit = 10.0; // 1 in production
 var timing = {
@@ -126,7 +126,7 @@ var welcome_block = {
     "pages": ["<div class='center-content'><br><br>Tervetuloa LEADBEHA hankkeen kyselyyn!<br><br>Kyselyyn vastaamiseen menee aikaa noin 15 minuuttia. Arvomme viisi 50e arvoista lahjakorttia kaikkien kyselyn loppuun saakka tehneiden kesken.<br><p><strong>Tekniset vaatimukset:</strong><br>Kysely vaatii Javascriptin toimiakseen.<br>Pyydämme varmuuden vuoksi laittamaan mainosten ja skriptien estäjät pois päältä kyselyn ajaksi.</p> <p>Ethän päivitä tai lataa sivua uudestaan kesken kyselyn.<br>Muutoin kysely on aloitettava kokonaan alusta ja edelliset vastaukset katoavat.</p><p>Paina nappia jatkaaksesi."],
     //choices: 'mouse',
     on_finish: function (trial_data) {
-		console.log('test')
+		//console.log('test')
         //var progress = jsPsych.progress();
         //console.log('You have completed approximately ' + progress.percent_complete + '% of the experiment');
         //jsPsych.setProgressBar(0.05)  $('#' + trial.prefix + 'progressbar-container').hide();
@@ -232,35 +232,24 @@ var demographics_block = {
         <h4>OSIO A: Taustakysymykset</h4>Vastaa alla oleviin kysymyksiin ja paina nappia jatkaaksesi.\
         </div><br>"],
     on_finish: function (trial_data) {
-		var gender = trial_data['Q1_Mikä_on_sukupuolesi?'];
+		var gender = trial_data['gender'];
 		if (gender == 'nainen') {
 			g = 'f';
-			jsPsych.data.addDataToLastTrial({
-				gender: 'nainen'
-			});
 		} else if (gender == 'mies') {
 			g = 'm';
-			jsPsych.data.addDataToLastTrial({
-				gender: 'mies'
-			});
 		} else {
 			g = 'a';
-			jsPsych.data.addDataToLastTrial({
-				gender: 'muu'
-			});
 		}
-		console.log('valittu sukupuoli ' + g)
+		console.log('valittu sukupuoli: ' + g)
 	}
 };
 
 var likert_and_survey_block = {
     type: 'survey-likert',
-    preamble: '<div><h4>OSIO B: Täydennyskoulutusmieltymykset</h4>Seuraavat kuvaukset liittyvät työssäkäyvien henkilöiden täydennyskoulutuskursseihin. Kukin kuvaus liittyy yksittäiseen kurssiin ja se on tiivistelmä siitä, mikä on kaikkein keskeisintä tuolla kurssilla. Arvio kunkin kurssikuvauksen jälkeen, kuinka paljon haluat osallistua kurssille asteikolla yhdestä kymmeneen (1...10):<br>1 = en missään tapauksessa halua osallistua, ..., 10 = ehdottomasti haluan osallistua</div><br>',
+    preamble: '<div><h4>OSIO B: Täydennyskoulutusmieltymykset</h4>Seuraavat kuvaukset liittyvät työssäkäyvien henkilöiden täydennyskoulutuskursseihin. Kukin kuvaus liittyy yksittäiseen kurssiin ja se on tiivistelmä siitä, mikä on kaikkein keskeisintä tuolla kurssilla. Arvioi kunkin kurssikuvauksen jälkeen, kuinka paljon haluat osallistua kurssille asteikolla yhdestä kymmeneen (1...10):<br>1 = en missään tapauksessa halua osallistua, ..., 10 = ehdottomasti haluan osallistua</div><br>',
     questions: stims.main_questions_statement,
     on_finish:
-    function () {
-        console.log('valittu sukupuoli ' + g)
-		
+    function () {		
 		var toShuffle = shuffleTogether(stims.main_questions_statement, stims.main_questions_question);
 		stims.main_questions_statement = toShuffle[0];
 		stims.main_questions_question = toShuffle[1];		
@@ -277,17 +266,19 @@ var likert_and_survey_block = {
 				testing: false,
 				stimDir: stims.stimDir,
 				block_num: i,
-				peerAgreement: [50, {
-						percent: 50,
+				peerAgreement: [50, // WAS 50, how similar to me    
+					{
+						percent: 50, // WAS 50, how similar to A
 						ref: "A",
-						func: inverseVotes
-					}, {
-						percent: peerC[i],
+						func: inverseVotes // will make a given peer's choices be the exact opposite of the peer that is labeled
+					}, 
+					{
+						percent: peerC[i], // how similar to B. NOTE: If not given, will be set to 75%
 						ref: "B",
 						func: addVotes
 					}
 				],
-				peerCPercent: peerC[i],
+				peerCPercent: peerC[i], // apparently not used in probability calculations
 				stim_regex: /.*\/(.*)\.jpg/,
 				prompt_regex: /How (.*) is this.*/,
 				timing: timing,
@@ -295,7 +286,15 @@ var likert_and_survey_block = {
 				mystery_questions: stims.main_questions_question[i],
 			};
 
-			block = poliTimelineGenNames(stim, prompts, peer, names, opts);			
+			block = poliTimelineGenNames(stim, prompts, peer, names, opts);	
+		
+			/////////// DEBUGGING, REMOVE IN PRODUCTION
+			console.log('!!!!!!!!! DEBUGGING MODE, LABELS INCLUDED !!!!!!!!!!!!!!!!!');
+			for (var kk=1;kk<4;kk++) {					
+				block[0].names[kk] = block[0].names[kk]+block[0].peer_label[kk];
+			}
+			/////////////////////
+			
 			block.type = 'similarity';
 			for (var j = 0; j < block.length; j++) {
 				jsPsych.addNodeToEndOfTimeline(block[j], function () {});
@@ -316,16 +315,12 @@ var likert_and_survey_block = {
 						console.log('data save failed!')
 					}
 				}
-				
 			}
-			jsPsych.addNodeToEndOfTimeline(lblock)			
-	
+			jsPsych.addNodeToEndOfTimeline(lblock)
 		}
-					
 		jsPsych.addNodeToEndOfTimeline(comments_block);
 		jsPsych.data.addProperties(subject_id_property);
 		jsPsych.addNodeToEndOfTimeline(savetrial_block); // force save before proceeding
-		
     },
 };
 

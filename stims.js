@@ -84,7 +84,7 @@ var stims = {
 		"Pitäisikö kurssien olla työntekijöiden hyödynnettävissä osana korkeakoulututkintoa?",
 		"Pitäisikö kurssien parantaa työntekijöiden motivaatiota työntekoon?",
 		"Pitäisikö kursseilla käsitellä yhteiskuntaan laajasti liittyviä asioita työntekijän alan ulkopuolelta?",
-		"Pitäisikö kurssien parantaa työntekijöiden kykyä soveltaa opittuja asioita tietoa työpaikan käytännön tilanteisiin?",
+		"Pitäisikö kurssien parantaa työntekijöiden kykyä soveltaa opittuja asioita ja tietoa työpaikan käytännön tilanteisiin?",
 		"Pitäisikö kurssien parantaa työntekijöiden ihmissuhdetaitoja?",
 		"Pitäisikö kurssien lisätä työntekijöiden luovuutta?",
 		"Pitäisikö kurssien vahvistaa työntekijöiden myönteistä minäkäsitystä?",

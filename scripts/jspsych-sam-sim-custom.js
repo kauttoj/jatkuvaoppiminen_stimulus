@@ -991,27 +991,13 @@ jsPsych.plugins.similarity = (function () {
                 "MysteryPeer2": trial.peer2,
                 "phase": trial.phase,
                 "peerCPercent": trial.peerCPercent,
+				'responses': JSON.stringify({'Prompt':trial.prompt}),
             };
             if ((trial.phase == "MYSTERY")) {
-                trial_data['mysteryRespKey'] = respKey;
-                // Chosen mystery peer
-				/*
-                trial_data['mysteryPeerChosenImg'] = trial.peers[mysteryPeers[respChoiceNum]];
-                trial_data['mysteryPeerChosenName'] = trial.names[mysteryPeers[respChoiceNum]];
-                trial_data['mysteryLabelChosen'] = trial.peer_label[mysteryPeers[respChoiceNum]];
-                // Unchosen mystery peer
-                trial_data['mysteryPeerUnchosenImg'] = trial.peers[mysteryPeers[(respChoiceNum + 1) % 2]];
-                trial_data['mysteryPeerUnchosenName'] = trial.names[mysteryPeers[(respChoiceNum + 1) % 2]];
-                trial_data['mysteryLabelUnchosen'] = trial.peer_label[mysteryPeers[(respChoiceNum + 1) % 2]];
-
-                if (trial_data['mysteryLabelChosen'] == trial.mysteryCorrect) {
-                    trial_data['ACC'] = 1;
-                } else {
-                    trial_data['ACC'] = 0;
-                }
-				*/
-				trial_data['mysteryLeftImg'] = trial.mystery[0]
-				trial_data['mysteryRightImg'] = trial.mystery[1]
+				trial_data['responses'] = JSON.stringify({
+					'Question':trial.mystery_questions,
+					'left_resp':$('#jspsych-sub-label_0')[0].textContent,'left_peer_name':trial.names[trial.peer1],'left_peer_type':trial.peer_label[trial.peer1],
+					'right_resp':$('#jspsych-sub-label_1')[0].textContent,'right_peer_name':trial.names[trial.peer2],'right_peer_type':trial.peer_label[trial.peer2]})
 				trial_data["stimuli"] = JSON.stringify(trial.mystery)
             }
 
