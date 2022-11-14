@@ -652,7 +652,7 @@ jsPsych.plugins.similarity = (function () {
 			
 			if (trial.practice) {
 				// we add likert example questions here
-				$('#jspsych-stim').append('Sitten tämä sama kurssikuvaus esitetään uudelleen ja sinun tehtävänäsi on arvioida se. Arvio kurssikuvauksen jälkeen, kuinka paljon haluat osallistua kurssille asteikolla yhdestä kymmeneen  (1...10).<br>(1=en missään tapauksessa halua osallistua ... 10 = ehdottomasti haluan osallistua)<br>')
+				$('#jspsych-stim').append('Sitten tämä sama kurssikuvaus esitetään uudelleen ja sinun tehtävänäsi on arvioida se. Arvio kurssikuvauksen jälkeen, kuinka paljon haluat osallistua kurssille asteikolla yhdestä kymmeneen (1...10).<br>(1=en missään tapauksessa halua osallistua ... 10 = ehdottomasti haluan osallistua)<br>')
 				$('#jspsych-stim').append('<form id="jspsych-survey-likert-form">');
 				questions = trial.mystery_questions //['Kurssilla syödään paljon']
 				// add likert scale questions

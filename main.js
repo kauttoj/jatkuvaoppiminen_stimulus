@@ -11,7 +11,7 @@ var g = 'a'; // global gender variable, set to mixed by default
 
 var peerC = [25,75].rep(Math.ceil(NBLOCKS/2)); // half-and-half, WAS [12.5, 87.5]
 
-var timesplit = 10.0; // 1 in production
+var timesplit = 1.0; // 1 in production
 var timing = {
     timeoutBeforePrompt: 0,
     timeoutBeforeStim: 0,
@@ -51,6 +51,7 @@ function practiceGenPoli(opts) {
             //"trialButtonLabel": 'Kun olet lukenut ohjeet, paina Jatka nappia: <br>',
             //"feedbackButtonLabel": "Paina nappia jatkaaksesi: <br>",
             "practice": true,
+			"mystery": ['oes/big_yes.jpg', 'xes/big-red-x.jpg'],
             "stimDir": "",
             "timeline": [
 			{
@@ -67,7 +68,7 @@ function practiceGenPoli(opts) {
                     "peer": 1,
                     "prompt": "<br>Hyvin meni! Nyt kun olet valinnut oman kantasi, yritä arvata muiden henkilöiden mielipidettä samasta asiasta.\
                     <br><strong>Pitääkö piirroselokuvissa esiintyä ankanmetsästystä?</strong>\
-                    <br><strong>Miten arvelet että ${peer} valitsi?</strong>",
+                    <br><strong>Miten arvelet että ${peer} valitsee?</strong>",
                     'feedbackPrompt': '<br>Saat palautteen muiden henkilöiden mielipiteistä nuolella, joka osoittaa kyseisen henkilön oikean vastauksen esitettyyn kysymykseen.\
                     <br>Tämä palaute näkyy ruudulla yhden sekunnin ennen kuin voit arvata seuraavan henkilön valintaa. Huomaa, että muiden henkilöiden oikeat vastaukset jäävät näkyviin ruudun oikeassa yläkulmassa olevaan taulukkoon.<br>Paina nappia jatkaaksesi.',
                     "feedbackChoices": "mouse",
@@ -76,7 +77,7 @@ function practiceGenPoli(opts) {
                     "peer": 2,
                     "prompt": "<br>Huomaa, että toiset henkilöt voivat olla yksimielisiä tai erimielisiä kunkin esitetyn mielipiteen suhteen.\
                     <br><strong>Pitääkö piirroselokuvissa esiintyä ankanmetsästystä?</strong>\
-                    <br><strong>Miten arvelet että ${peer} valitsi?</strong>",
+                    <br><strong>Miten arvelet että ${peer} valitsee?</strong>",
                     'feedbackPrompt': '<br>Huomaa että voit parantaa omia arvauksiasi tarkkailemalla muiden tekemiä valintoja kokeen aikana. Näet kaikki aikaisemmat valinnat ruudun oikeassa yläkulmassa olevasta taulukosta.<br>Paina nappia jatkaaksesi.',
                     "feedbackChoices": "mouse",
                 }, {
@@ -185,10 +186,10 @@ var demographics_block = {
         'Oletko osallistunut täydennyskoulutukseen viimeisen 12kk aikana?',
         'Mikä on sukupuolesi?',
         'Mikä on korkein suorittamasi tutkinto?',
-        'Mikä on ikäsi vuosissa?', // number
+        'Mikä on ikäsi vuosissa (numero)?', // number
         'Mikä on ammattisi?', // text
         'Millä toimialla työskentelet?', // text
-        'Kuinka monta vuotta olet ollut työelämässä yhteensä?', // number
+        'Kuinka monta vuotta olet ollut työelämässä yhteensä (numero)?', // number
     ],
     value: [], // EMPTY IN PRODUCTION
     input_type: ['likert', 'likert', 'likert', 'text', 'text', 'text', 'text'], // ['text','text','text','text']
@@ -207,16 +208,13 @@ var demographics_block = {
             return ((Number(x) <= 90) & (Number(x) >= 15));
         },
         function (x) {
-            return x.length > 0;
+            return true; // no check
         },
         function (x) {
-            return x.length > 0;
+            return true; // no check
         },
         function (x) {
-            if (x == '') {
-                return false;
-            };
-            return ((Number(x) >= 0) & (Number(x) <= 80));
+            return true; // no check
         },
     ],
     validationMessage: [
@@ -246,7 +244,7 @@ var demographics_block = {
 
 var likert_and_survey_block = {
     type: 'survey-likert',
-    preamble: '<div><h4>OSIO B: Täydennyskoulutusmieltymykset</h4>Seuraavat kuvaukset liittyvät työssäkäyvien henkilöiden täydennyskoulutuskursseihin. Kukin kuvaus liittyy yksittäiseen kurssiin ja se on tiivistelmä siitä, mikä on kaikkein keskeisintä tuolla kurssilla. Arvioi kunkin kurssikuvauksen jälkeen, kuinka paljon haluat osallistua kurssille asteikolla yhdestä kymmeneen (1...10):<br>1 = en missään tapauksessa halua osallistua, ..., 10 = ehdottomasti haluan osallistua</div><br>',
+    preamble: '<div><h4>OSIO B: Täydennyskoulutusmieltymykset</h4>Seuraavat kuusi kuvausta liittyvät työssäkäyvien henkilöiden täydennyskoulutuskursseihin. Kukin kuvaus liittyy yksittäiseen kurssiin ja se on tiivistelmä siitä, mikä on kaikkein keskeisintä tuolla kurssilla.<br>Arvio kurssikuvauksen jälkeen, kuinka paljon haluat osallistua kurssille asteikolla yhdestä kymmeneen (1...10):<br>1 = en missään tapauksessa halua osallistua, ..., 10 = ehdottomasti haluan osallistua</div><br>',
     questions: stims.main_questions_statement,
     on_finish:
     function () {		
@@ -289,10 +287,10 @@ var likert_and_survey_block = {
 			block = poliTimelineGenNames(stim, prompts, peer, names, opts);	
 		
 			/////////// DEBUGGING, REMOVE IN PRODUCTION
-			console.log('!!!!!!!!! DEBUGGING MODE, LABELS INCLUDED !!!!!!!!!!!!!!!!!');
-			for (var kk=1;kk<4;kk++) {					
-				block[0].names[kk] = block[0].names[kk]+block[0].peer_label[kk];
-			}
+			//console.log('!!!!!!!!! DEBUGGING MODE, LABELS INCLUDED !!!!!!!!!!!!!!!!!');
+			//for (var kk=1;kk<4;kk++) {					
+			//	block[0].names[kk] = block[0].names[kk]+block[0].peer_label[kk];
+			//}
 			/////////////////////
 			
 			block.type = 'similarity';

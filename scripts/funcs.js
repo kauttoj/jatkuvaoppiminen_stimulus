@@ -680,9 +680,9 @@ function poliTimelineGenNames(stims, prompts, peers, names, opts) {
 			data		: {block_num: block_num},
 			timeline: [
 			you_trial,
-			{peer: 1, prompt: prompts[i] + "<br><span id='subprompt'>Miten arvioit että <u>${peer}</u> valitsi?</span>"},
-			{peer: 2, prompt: prompts[i] + "<br><span id='subprompt'>Miten arvioit että <u>${peer}</u> valitsi?</span>"},
-			{peer: 3, prompt: prompts[i] + "<br><span id='subprompt'>Miten arvioit että <u>${peer}</u> valitsi?</span>"},
+			{peer: 1, prompt: prompts[i] + "<br><span id='subprompt'>Miten arvioit että <u>${peer}</u> valitsee?</span>"},
+			{peer: 2, prompt: prompts[i] + "<br><span id='subprompt'>Miten arvioit että <u>${peer}</u> valitsee?</span>"},
+			{peer: 3, prompt: prompts[i] + "<br><span id='subprompt'>Miten arvioit että <u>${peer}</u> valitsee?</span>"},
 			]
 		}
 		if (i == 0) {

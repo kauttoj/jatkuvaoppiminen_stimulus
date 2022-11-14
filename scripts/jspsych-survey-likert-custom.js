@@ -70,7 +70,7 @@ jsPsych.plugins['survey-likert'] = (function () {
 			//$("#jspsych-content").attr("style","width: 800px;")	
 			display_element.append($('<div>', {
                 "id": "content-width-limiter",
-                "style":"width: 800px;",
+                "style":"width: 850px;",
             }));
 			display_element = $("#content-width-limiter")			
 			display_element.addClass('jspsych-display-element');
