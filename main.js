@@ -124,7 +124,7 @@ var welcome_block = {
     "type": "instructions",
     "show_clickable_nav": true,
     "key_forward": "",	
-    "pages": ["<div class='center-content'><br><br>Tervetuloa LEADBEHA hankkeen kyselyyn!<br><br>Kyselyyn vastaamiseen menee aikaa noin 15 minuuttia. Arvomme viisi 50e arvoista lahjakorttia kaikkien kyselyn loppuun saakka tehneiden kesken.<br><p><strong>Tekniset vaatimukset:</strong><br>Kysely vaatii Javascriptin toimiakseen.<br>Pyydämme varmuuden vuoksi laittamaan mainosten ja skriptien estäjät pois päältä kyselyn ajaksi.</p> <p>Ethän päivitä tai lataa sivua uudestaan kesken kyselyn.<br>Muutoin kysely on aloitettava kokonaan alusta ja edelliset vastaukset katoavat.</p><p>Paina nappia jatkaaksesi."],
+    "pages": ["<div class='center-content'><br><br>Tervetuloa LEADBEHA hankkeen kyselyyn!<br><br>Kyselyyn vastaamiseen menee aikaa noin 15 minuuttia.<br><strong>HUOM: Ylimääräisenä palkintona arvomme viisi 50e arvoista lahjakorttia kaikkien kyselyn loppuun saakka tehneiden kesken</strong>.<br><p><strong>Tekniset vaatimukset:</strong><br>Kysely vaatii Javascriptin toimiakseen.<br>Pyydämme varmuuden vuoksi laittamaan mainosten ja skriptien estäjät pois päältä kyselyn ajaksi.</p> <p>Ethän päivitä tai lataa sivua uudestaan kesken kyselyn.<br>Muutoin kysely on aloitettava kokonaan alusta ja edelliset vastaukset katoavat.</p><p>Paina nappia jatkaaksesi."],
     //choices: 'mouse',
     on_finish: function (trial_data) {
 		//console.log('test')
@@ -173,11 +173,11 @@ var savetrial_block = {
 
 var comments_block = {
     type: 'survey-text-sam',
-    questions: ['Jos haluat osallistua arvontaan, syötä email osoitteesi tai muu haluamasi yhteystieto', 'Avoimet kommentit ja palaute'],	
-    validation: [function (x) {return true}, function (x) {return true}], // we don't really check these
-    rows: [4, 5],
+    questions: ['Avoimet kommentit ja palaute'],	
+    validation: [function (x) {return true}], // we don't really check these
+    rows: [6],
     input_type: ['textarea', 'textarea'],
-    preamble: ["<div>Haluamme vielä saada yhteystietosi 50 euron lahjakorttien (5 kpl) arvontaan. Tiedot ovat vapaaehtoisia ja voit halutessasi siirtyä suoraan eteenpäin.</div>"]
+    preamble: ["<div>Kyselyn varsinainen osa on nyt ohi.<br>Jos sinulla on kommentteja tai palautetta liittyen kyselyyn, voit kirjoittaa niitä alle. Tämä on vapaaehtoista.<br>Paina nappia siirtyäksesi eteenpäin.</div>"]
 };
 
 var demographics_block = {
@@ -244,7 +244,7 @@ var demographics_block = {
 
 var likert_and_survey_block = {
     type: 'survey-likert',
-    preamble: '<div><h4>OSIO B: Täydennyskoulutusmieltymykset</h4>Seuraavat kuusi kuvausta liittyvät työssäkäyvien henkilöiden täydennyskoulutuskursseihin. Kukin kuvaus liittyy yksittäiseen kurssiin ja se on tiivistelmä siitä, mikä on kaikkein keskeisintä tuolla kurssilla.<br>Arvio kurssikuvauksen jälkeen, kuinka paljon haluat osallistua kurssille asteikolla yhdestä kymmeneen (1...10):<br>1 = en missään tapauksessa halua osallistua, ..., 10 = ehdottomasti haluan osallistua</div><br>',
+    preamble: '<div><h4>OSIO B: Täydennyskoulutusmieltymykset</h4>Seuraavat kuusi kuvausta liittyvät työssäkäyvien henkilöiden täydennyskoulutuskursseihin. Kukin kuvaus liittyy yksittäiseen kurssiin ja se on tiivistelmä siitä, mikä on kaikkein keskeisintä tuolla kurssilla.<br>Arvioi kurssikuvauksen jälkeen, kuinka paljon haluat osallistua kurssille asteikolla yhdestä kymmeneen (1...10):<br>1 = en missään tapauksessa halua osallistua, ..., 10 = ehdottomasti haluan osallistua</div><br>',
     questions: stims.main_questions_statement,
     on_finish:
     function () {		
@@ -300,7 +300,7 @@ var likert_and_survey_block = {
 
 			lblock = {
 				type: 'survey-likert',
-				preamble: 'Arvio kuinka paljon haluat osallistua kuvauksen mukaiselle kurssille asteikolla yhdestä kymmeneen (1...10):<br>1 = en missään tapauksessa halua osallistua, ..., 10 = ehdottomasti haluan osallistua<br>',
+				preamble: 'Arvioi kuinka paljon haluat osallistua kuvauksen mukaiselle kurssille asteikolla yhdestä kymmeneen (1...10):<br>1 = en missään tapauksessa halua osallistua, ..., 10 = ehdottomasti haluan osallistua<br>',
 				questions: [stims.main_questions_statement[i]],
 				location_after: "#jspsych-stim", // put likert after main block, not under sidebar table
 				//display_element: $("#jspsych-stim"),  // DOES NOT WORK
@@ -369,7 +369,7 @@ jsPsych.pluginAPI.preloadImages(stims, function () {
 
             $('#jspsych-content').empty()
             .css('visibility', 'visible')
-            .html('<br>Kysely on nyt ohi ja tiedot tallennettu.<br><br>Suuri kiitos osallistumisestasi!');
+            .html('<br>Kysely on nyt ohi ja tiedot tallennettu.<br>Suuri kiitos osallistumisestasi!<br><br>Mikäli haluat osallistua 50e lahjakortin arvontaan, klikkaa alla olevaa linkkiä yhteystietojesi antamista varten.<br><a href="LINKKI">LINKKI</a>');
 
         }
     });
