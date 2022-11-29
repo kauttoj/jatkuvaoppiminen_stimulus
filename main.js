@@ -356,13 +356,12 @@ jsPsych.pluginAPI.preloadImages(stims, function () {
 			} catch (e) {
 				console.log('data save failed!')
 			}
-
-			window.open("SECRET", "_self");
-			/*
-            $('#jspsych-content').empty()
+			
+			$('#jspsych-content').empty()
             .css('visibility', 'visible')
-            .html('<br>Kysely on nyt ohi ja tiedot tallennettu.<br>Suuri kiitos osallistumisestasi!<br><br>Mikäli haluat osallistua 50e lahjakortin arvontaan, klikkaa alla olevaa linkkiä yhteystietojesi antamista varten.<br><a href="LINKKI">LINKKI</a>');
-			*/
-        }
+            .html('<br>Siirryt nyt automaattisesti arvontasivulle<br><a href="SECRET">Linkki arvontasivulle</a>');
+			
+			window.open("SECRET", "_self");			            
+		}
     });
 });
