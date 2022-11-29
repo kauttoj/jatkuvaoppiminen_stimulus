@@ -126,12 +126,6 @@ var welcome_block = {
     "key_forward": "",	
     "pages": ["<div class='center-content'><br><br>Tervetuloa LEADBEHA hankkeen kyselyyn!<br><br>Kyselyyn vastaamiseen menee aikaa noin 15 minuuttia.<br><strong>HUOM: Ylimääräisenä palkintona arvomme viisi 50e arvoista lahjakorttia kaikkien kyselyn loppuun saakka tehneiden kesken</strong>.<br><p><strong>Tekniset vaatimukset:</strong><br>Kysely vaatii Javascriptin toimiakseen.<br>Pyydämme varmuuden vuoksi laittamaan mainosten ja skriptien estäjät pois päältä kyselyn ajaksi.</p> <p>Ethän päivitä tai lataa sivua uudestaan kesken kyselyn.<br>Muutoin kysely on aloitettava kokonaan alusta ja edelliset vastaukset katoavat.</p><p>Paina nappia jatkaaksesi."],
     //choices: 'mouse',
-    on_finish: function (trial_data) {
-		//console.log('test')
-        //var progress = jsPsych.progress();
-        //console.log('You have completed approximately ' + progress.percent_complete + '% of the experiment');
-        //jsPsych.setProgressBar(0.05)  $('#' + trial.prefix + 'progressbar-container').hide();
-    },
 	on_load: function() {
     // Remove progress bar from screen
 		document.getElementById("jspsych-progressbar-container").style.visibility = "hidden";
@@ -176,8 +170,11 @@ var comments_block = {
     questions: ['Avoimet kommentit ja palaute'],	
     validation: [function (x) {return true}], // we don't really check these
     rows: [6],
-    input_type: ['textarea', 'textarea'],
-    preamble: ["<div>Kyselyn varsinainen osa on nyt ohi.<br>Jos sinulla on kommentteja tai palautetta liittyen kyselyyn, voit kirjoittaa niitä alle. Tämä on vapaaehtoista.<br>Paina nappia siirtyäksesi eteenpäin.</div>"]
+    input_type: ['textarea'],
+    preamble: ["<div>Kyselyn varsinainen osa on nyt ohi.<br>Jos sinulla on kommentteja tai palautetta liittyen kyselyyn, voit kirjoittaa niitä alle. Tämä on vapaaehtoista.<br>Paina nappia siirtyäksesi eteenpäin.</div>"],
+	on_finish: function () {
+		;
+	}
 };
 
 var demographics_block = {
@@ -285,14 +282,7 @@ var likert_and_survey_block = {
 			};
 
 			block = poliTimelineGenNames(stim, prompts, peer, names, opts);	
-		
-			/////////// DEBUGGING, REMOVE IN PRODUCTION
-			//console.log('!!!!!!!!! DEBUGGING MODE, LABELS INCLUDED !!!!!!!!!!!!!!!!!');
-			//for (var kk=1;kk<4;kk++) {					
-			//	block[0].names[kk] = block[0].names[kk]+block[0].peer_label[kk];
-			//}
-			/////////////////////
-			
+					
 			block.type = 'similarity';
 			for (var j = 0; j < block.length; j++) {
 				jsPsych.addNodeToEndOfTimeline(block[j], function () {});
@@ -367,10 +357,12 @@ jsPsych.pluginAPI.preloadImages(stims, function () {
 				console.log('data save failed!')
 			}
 
+			window.open("SECRET", "_self");
+			/*
             $('#jspsych-content').empty()
             .css('visibility', 'visible')
             .html('<br>Kysely on nyt ohi ja tiedot tallennettu.<br>Suuri kiitos osallistumisestasi!<br><br>Mikäli haluat osallistua 50e lahjakortin arvontaan, klikkaa alla olevaa linkkiä yhteystietojesi antamista varten.<br><a href="LINKKI">LINKKI</a>');
-
+			*/
         }
     });
 });
