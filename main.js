@@ -97,7 +97,7 @@ function practiceGenPoli(opts) {
         "type": "instructions",
         "show_clickable_nav": true,
         "key_forward": " ",
-        "pages": ['<br><br>Harjoitus on nyt ohi. Seuraavaksi jatkamme varsinaisiin kysymyksiin, joita on 48 kpl.<br><br>Paina nappia jatkaaksesi.'],
+        "pages": ['<br><br>Harjoitus on nyt ohi. Seuraavaksi jatkamme varsinaisiin kysymyksiin, joita on 48 kpl.<br>Kysymysten ja vastausten antamisen väliin on asetettu noin 1s mietintäaika, eli viive ei johdu sivuston hitaudesta.<br><br>Paina nappia jatkaaksesi.'],
 		on_load: function() {
 		// Remove progress bar from screen
 			document.getElementById("jspsych-progressbar-container").style.visibility = "visible";
@@ -124,7 +124,7 @@ var welcome_block = {
     "type": "instructions",
     "show_clickable_nav": true,
     "key_forward": "",	
-    "pages": ["<div class='center-content'><br><br>Tervetuloa LEADBEHA hankkeen kyselyyn!<br><br>Kyselyyn vastaamiseen menee aikaa noin 15 minuuttia.<br><strong>HUOM: Ylimääräisenä palkintona arvomme viisi 50e arvoista lahjakorttia kaikkien kyselyn loppuun saakka tehneiden kesken</strong>.<br><p><strong>Tekniset vaatimukset:</strong><br>Kysely vaatii Javascriptin toimiakseen.<br>Pyydämme varmuuden vuoksi laittamaan mainosten ja skriptien estäjät pois päältä kyselyn ajaksi.</p> <p>Ethän päivitä tai lataa sivua uudestaan kesken kyselyn.<br>Muutoin kysely on aloitettava kokonaan alusta ja edelliset vastaukset katoavat.</p><p>Paina nappia jatkaaksesi."],
+    "pages": ["<div class='center-content'><br><br>Tervetuloa LEADBEHA hankkeen kyselyyn!<br><br>Kyselyyn vastaamiseen menee aikaa noin 15 minuuttia.<br><strong>HUOM: Ylimääräisenä palkintona arvomme viisi 50e arvoista S-ryhmän lahjakorttia kaikkien kyselyn loppuun saakka tehneiden kesken</strong>.<br><p><strong>Tekniset vaatimukset:</strong><br>Kysely vaatii Javascriptin toimiakseen.<br>Pyydämme varmuuden vuoksi laittamaan mainosten ja skriptien estäjät pois päältä kyselyn ajaksi.</p> <p>Ethän päivitä tai lataa sivua uudestaan kesken kyselyn.<br>Muutoin kysely on aloitettava kokonaan alusta ja edelliset vastaukset katoavat.</p><p>Paina nappia jatkaaksesi."],
     //choices: 'mouse',
 	on_load: function() {
     // Remove progress bar from screen
@@ -359,9 +359,10 @@ jsPsych.pluginAPI.preloadImages(stims, function () {
 			
 			$('#jspsych-content').empty()
             .css('visibility', 'visible')
-            .html('<br>Siirryt nyt automaattisesti arvontasivulle<br><a href="SECRET">Linkki arvontasivulle</a>');
+            .html('<br>Siirryt nyt automaattisesti eteenpäin<br><a href="SECRET">Klikkaa linkkiä siirtyäksesi eteenpäin</a>');
+
+			window.open("SECRET", "_self");
 			
-			window.open("SECRET", "_self");			            
 		}
     });
 });
